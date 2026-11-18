@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Corps libres · JASG</title>
+<meta name="description" content="Corps libres, de Marc Vernet : un instantané de chemin sur la gravité du sexe. À lire gratuitement.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500&display=swap">
+<style>
+/* Page intermédiaire : on reste à l'aube de la journée JASG, une lueur vert sapin, un seul geste (lire). */
+:root{
+  --encre:#1f1720; --sapin:#3f6a56; --lueur:#6f9a84;
+  --f-titre:"DM Serif Display",Didot,"Bodoni 72",Georgia,serif;
+  --f-texte:"Outfit","Avenir Next","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{background:#f6c7a6}
+body{margin:0;min-height:100vh;min-height:100dvh;background:linear-gradient(#f6c7a6,#f7dcc2 40%,#f4e9da);color:var(--encre);font-family:var(--f-texte);font-weight:300;-webkit-font-smoothing:antialiased;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid currentColor;outline-offset:5px;border-radius:6px}
+main{max-width:720px;margin:0 auto;padding-block:clamp(40px,8vw,90px) clamp(56px,9vw,100px);padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px));display:grid;gap:28px}
+.retour{font-size:13px;letter-spacing:.24em;text-transform:uppercase;opacity:.7}
+.retour:hover{opacity:1}
+.feu{width:120px;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#fffaf0 0 9%,var(--lueur) 30%,rgba(111,154,132,.35) 52%,transparent 70%);animation:respire 5s ease-in-out infinite}
+@keyframes respire{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+.heure{font-size:13px;letter-spacing:.3em;text-transform:uppercase;opacity:.7;margin:0 0 6px}
+h1{font:400 clamp(56px,11vw,112px)/.88 var(--f-titre);margin:0;letter-spacing:-.02em}
+.sous{font:italic 400 clamp(19px,2.4vw,24px)/1.3 var(--f-titre);margin:12px 0 0;opacity:.85}
+.accroche{font:italic 400 clamp(20px,2.4vw,24px)/1.45 var(--f-titre);margin:0;border-left:1px solid rgba(31,23,32,.35);padding-left:18px}
+.accroche p{margin:0 0 12px}
+.posture{font-size:18px;line-height:1.6;margin:0;max-width:56ch}
+.lire{justify-self:start;display:inline-flex;align-items:center;gap:12px;min-height:54px;padding:0 28px;border-radius:999px;background:var(--sapin);color:#f4efe6;font-size:17px;font-weight:500}
+.lire::after{content:"→";transition:transform .2s}
+.lire:hover::after{transform:translateX(4px)}
+.note{font-size:14px;opacity:.7;margin:-12px 0 0}
+.pied{font-size:12.5px;opacity:.55;margin:20px 0 0}
+@media (prefers-reduced-motion: reduce){.feu{animation:none}}
+</style>
+</head>
+<body>
+<main>
+  <a class="retour" href="./">← la journée</a>
+  <div class="feu" aria-hidden="true"></div>
+  <header>
+    <p class="heure">l'aube · alléger</p>
+    <h1>Corps libres</h1>
+    <p class="sous">Essai sur la gravité du sexe et les générations qui viennent</p>
+  </header>
+  <div class="accroche">
+    <p>Vous savez avec combien de personnes vous avez couché. Vous ne savez pas avec combien vous avez dîné.</p>
+    <p>Ce livre cherche qui a ouvert le registre.</p>
+  </div>
+  <p class="posture">Ce livre est un instantané de mon chemin, à un moment donné : des réflexions et des avancées, pas des certitudes ni des théories. Lisez-le avec votre regard critique, sur le livre comme sur vos propres sensibilités, vos peurs et vos névroses. Gardez ce qui vous parle, laissez le reste. Et allez jusqu'au post-scriptum : il jette une tout autre lumière sur l'ensemble.</p>
+  <a class="lire" href="https://drive.google.com/file/d/1fhzMOWpVURDVarRHlb-cm_mzjuYaD4sY/view" target="_blank" rel="noopener">Lire le livre</a>
+  <p class="note">PDF, gratuit, à lire à l'écran ou à imprimer. À partager autant que vous voulez.</p>
+  <p class="pied">Marc Vernet · Éditions JASG</p>
+</main>
+</body>
+</html>
