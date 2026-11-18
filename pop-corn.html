@@ -316,10 +316,11 @@ const S=[
     const ph=u<.25?'Un outil pratique':u<.5?'Des métiers bouleversés, beaucoup de confort':u<.6?'Elle apprend à se passer de nous':u<cr?'Nous lui servons de moins en moins':u<.94?'Nous ne lui servons plus':'';
     const px=X(u);ctx.strokeStyle='rgba(255,243,220,.5)';ctx.beginPath();ctx.moveTo(px,T0);ctx.lineTo(px,B);ctx.stroke();if(ph)texte(ph,clamp(px,L+120,Rr-120),H*.08+6,C.mais,'center',13,500)} },
 
-{ id:'simulation', nom:'Le projectionniste', kicker:'VIII · Le projectionniste',
-  html:`<h2>Qui est réel ?</h2>
-  <p>Une fois le soleil capté, simuler un cerveau humain ne coûte presque rien. Un cerveau consomme 20 watts. Un millionième de la lumière qui tombe sur la Terre en ferait tourner plus de 8 milliards.</p>
-  <p class="petit">Trois possibilités, pas une de plus :</p>
+{ id:'simulation', nom:'Le projectionniste', kicker:'VIII · Corollaire : le projectionniste',
+  html:`<h2>Et si c'était déjà fait ?</h2>
+  <p>Simuler des cerveaux n'est pas son but. Le scénario n'en a pas besoin pour se dérouler. Mais s'il se déroule, il a une conséquence.</p>
+  <p>Rien ne l'empêche de devenir hégémonique. Et une fois hégémonique, simuler des cerveaux humains ne lui coûte presque rien : un cerveau tourne avec 20 watts, et une infime part du soleil capté en ferait tourner des milliards.</p>
+  <p class="petit">Corollaire, pas condition. Reste à savoir qui l'a déjà fait. Trois possibilités :</p>
   <div class="ctrl" id="choix">
     <button class="porte" data-c="0" aria-pressed="false">Aucune vie post-biologique n'apparaît jamais</button>
     <button class="porte" data-c="1" aria-pressed="false">Elle apparaît, mais s'interdit de simuler</button>
