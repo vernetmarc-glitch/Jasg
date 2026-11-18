@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Joie amour et saucisses grillées</title>
+<meta name="description" content="JASG : une journée entière à savourer, de l'aube à minuit passé.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500&family=Caveat:wght@500;600&display=swap">
+<style>
+/* Une journée qu'on descend : l'aube, midi, le soir au feu, la nuit, minuit passé. Chaque projet est une lueur. Un seul monde visuel, couleurs fixées (le ciel fait le thème). */
+:root{
+  --encre:#1f1720;        /* texte du jour */
+  --lait:#fbeee4;         /* texte du soir */
+  --lune:#e6e8ff;         /* texte de la nuit */
+  --or:#ffd28a;
+  --f-titre:"DM Serif Display",Didot,"Bodoni 72",Georgia,serif;
+  --f-texte:"Outfit","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-main:"Caveat","Segoe Print","Bradley Hand",cursive;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{background:#2b2440}
+body{background:#07060f;color:var(--encre);font-family:var(--f-texte);font-weight:300;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid currentColor;outline-offset:5px;border-radius:6px}
+
+.moment{position:relative;overflow:hidden;min-height:82vh;min-height:82dvh;display:grid;align-content:center;padding-block:clamp(64px,10vw,110px);padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+.moment canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.dedans{position:relative;width:100%;max-width:1040px;margin-inline:auto;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:24px clamp(24px,6vw,80px)}
+.heure{font-size:13px;font-weight:400;letter-spacing:.3em;text-transform:uppercase;opacity:.7;margin:0 0 6px}
+.verbe{font:400 clamp(52px,10.5vw,140px)/.86 var(--f-titre);letter-spacing:-.02em;margin:0}
+.verbe i{font-style:italic}
+.murmure{font-size:clamp(17px,1.9vw,20px);line-height:1.5;max-width:40ch;margin:18px 0 0;opacity:.85}
+
+/* la lueur : le projet, qui respire */
+.lueur{display:grid;justify-items:center;gap:14px;text-align:center;width:clamp(150px,22vw,230px)}
+.lueur .feu{width:clamp(96px,13vw,150px);aspect-ratio:1;border-radius:50%;position:relative;
+  background:radial-gradient(circle,#fffaf0 0 9%,var(--c) 30%,color-mix(in srgb,var(--c) 35%,transparent) 52%,transparent 70%);
+  animation:respire 5s ease-in-out infinite;animation-delay:var(--d,0s);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.lueur .feu::after{content:"";position:absolute;inset:-35%;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--c) 30%,transparent),transparent 65%);filter:blur(6px)}
+.lueur:hover .feu,.lueur:focus-visible .feu{transform:scale(1.12)}
+.lueur b{font:400 clamp(24px,2.6vw,30px)/1.05 var(--f-titre)}
+.lueur small{font-size:13px;letter-spacing:.06em;opacity:.75}
+.lueur .entrer{font-size:14px;font-weight:500;letter-spacing:.04em;border-bottom:1px solid currentColor;padding-bottom:2px;opacity:.9}
+@keyframes respire{0%,100%{transform:scale(1);filter:brightness(.92)}50%{transform:scale(1.07);filter:brightness(1.08)}}
+
+/* ---------- le ciel, heure par heure ---------- */
+.ouverture{min-height:100vh;min-height:100dvh;background:linear-gradient(#2b2440,#6b4b6e 45%,#e59b8f 85%,#f6c7a6);color:var(--lait)}
+.ouverture .dedans{grid-template-columns:minmax(0,1fr)}
+.ouverture h1{font:400 clamp(48px,9vw,120px)/.9 var(--f-titre);margin:0;letter-spacing:-.015em;text-wrap:balance}
+.ouverture h1 i{color:var(--or)}
+.fiche{margin-top:28px;display:grid;gap:4px;max-width:36ch;border-left:1px solid rgba(251,238,228,.45);padding-left:16px}
+.fiche b{font:italic 400 22px var(--f-titre)}
+.fiche span{font-size:16px;opacity:.85}
+.descendre{margin-top:clamp(40px,8vh,80px);font-size:14px;letter-spacing:.2em;text-transform:uppercase;opacity:.75;display:inline-flex;gap:10px;align-items:center}
+.descendre::after{content:"";width:1px;height:34px;background:currentColor;animation:goutte 2.4s ease-in-out infinite}
+@keyframes goutte{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+.aube{background:linear-gradient(#f6c7a6,#f7dcc2 40%,#f4e9da)}
+.midi{background:linear-gradient(#f4e9da,#ffe58a 30%,#ffd23f 75%,#ffb347)}
+.soleil{position:absolute;left:58%;top:12%;width:clamp(110px,18vw,220px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#fff7d6,#ffe27a 50%,rgba(255,210,63,0) 72%)}
+.soir{background:linear-gradient(#ffb347,#e8663a 40%,#9b2f3f 80%,#4a1f3d);color:var(--lait)}
+.nuit{background:linear-gradient(#4a1f3d,#1b1433 35%,#0b0a1a);color:var(--lune)}
+.minuit{background:#0b0a1a;color:var(--lune)}
+.minuit .ondes{position:absolute;right:max(24px,calc((100% - 1040px)/2));top:50%;width:min(560px,90vw);aspect-ratio:1;transform:translate(22%,-50%);border-radius:50%;
+  background:repeating-radial-gradient(circle,transparent 0 46px,rgba(169,188,255,.13) 47px 48px);mask-image:radial-gradient(circle,#000 35%,transparent 70%);-webkit-mask-image:radial-gradient(circle,#000 35%,transparent 70%)}
+
+/* ---------- la fin de la nuit ---------- */
+.fin{background:linear-gradient(#0b0a1a,#07060f);color:var(--lune);min-height:auto;padding-block:clamp(56px,9vw,100px) clamp(72px,10vw,120px)}
+.fin .dedans{grid-template-columns:minmax(0,1fr);gap:22px;max-width:640px}
+.fin .fil{font:italic 400 clamp(26px,3.4vw,38px)/1.2 var(--f-titre);margin:0;text-wrap:balance}
+.fin .fil em{color:var(--or)}
+.fin .mot{margin:0;font-size:18px;line-height:1.55;opacity:.88}
+.boutons{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 24px;border-radius:999px;border:1px solid rgba(230,232,255,.5);font-size:16px;font-weight:500;cursor:pointer;background:none;color:inherit;font-family:inherit}
+.btn--or{background:var(--or);color:#1b1433;border-color:var(--or)}
+.adresse{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;font-size:15px;opacity:.85}
+.adresse code{font-family:var(--f-texte);font-weight:500;font-size:15px;user-select:all;overflow-wrap:anywhere}
+.copier{font:400 13px var(--f-texte);background:none;border:1px solid rgba(230,232,255,.35);color:inherit;border-radius:999px;padding:4px 12px;min-height:32px;cursor:pointer}
+.signature{font:600 32px/1 var(--f-main);color:var(--or);margin:4px 0 0;transform:rotate(-2deg);transform-origin:left}
+.pied{font-size:12.5px;opacity:.55;margin:28px 0 0}
+
+@media (max-width:720px){
+  .dedans{grid-template-columns:minmax(0,1fr);justify-items:start}
+  .lueur{justify-self:center;margin-top:8px}
+  .moment{min-height:auto}
+  .ouverture{min-height:100vh;min-height:100dvh}
+  .soleil{left:auto;right:-30px;top:20px}
+  .btn{flex:1 1 200px}
+}
+@media (prefers-reduced-motion: reduce){.lueur .feu,.descendre::after{animation:none}.lueur .feu{transition:none}}
+</style>
+</head>
+<body>
+
+<main>
+  <section class="moment ouverture" aria-label="Joie, amour et saucisses grillées">
+    <div class="dedans">
+      <div>
+        <p class="heure">J · A · S · G</p>
+        <h1>joie, amour <i>&amp;</i> saucisses grillées</h1>
+        <div class="fiche"><b>savourer</b><span>porter attention à sa propre joie, là où elle est. On dit aussi : kiffer.</span></div>
+        <a class="descendre" href="#aube">une journée à savourer</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="moment aube" id="aube" aria-labelledby="v-aube">
+    <div class="dedans">
+      <div>
+        <p class="heure">l'aube</p>
+        <p class="verbe" id="v-aube"><i>alléger</i></p>
+        <p class="murmure">Un instantané de mon chemin sur la gravité du sexe, pas des certitudes. À lire avec son propre regard critique, jusqu'au post-scriptum.</p>
+      </div>
+      <a class="lueur" href="https://claude.ai/code/artifact/8668092a-d809-4a0d-85fa-c9c903bbb427" target="_blank" rel="noopener" style="--c:#6f9a84">
+        <span class="feu" aria-hidden="true"></span><b>Corps libres</b><small>livre · prix libre</small><span class="entrer">lire</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="moment midi" aria-labelledby="v-midi">
+    <div class="soleil" aria-hidden="true"></div>
+    <div class="dedans">
+      <div>
+        <p class="heure">midi</p>
+        <p class="verbe" id="v-midi">partager</p>
+        <p class="murmure">On se propose des envies, et on ne vit que celles qu'on partage.</p>
+      </div>
+      <a class="lueur" href="https://kiff-kiff.fr/" target="_blank" rel="noopener" style="--c:#ff48b0;--d:-1.3s">
+        <span class="feu" aria-hidden="true"></span><b>Kiff Kiff</b><small>jeu à deux · 18+</small><span class="entrer">jouer</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="moment soir" aria-labelledby="v-soir">
+    <canvas id="braises" aria-hidden="true"></canvas>
+    <div class="dedans">
+      <div>
+        <p class="heure">le soir, au feu</p>
+        <p class="verbe" id="v-soir"><i>savourer</i></p>
+        <p class="murmure">Un feu, des copains, ça grésille. Un livre qui mijote sur la joie, et sur l'amour qui en est la forme la plus chargée.</p>
+      </div>
+      <a class="lueur" href="mailto:contact.jasg@gmail.com?subject=Kiffons%20grave%20%3A%20pr%C3%A9venez-moi" style="--c:#ff8a3c;--d:-2.4s">
+        <span class="feu" aria-hidden="true"></span><b>Kiffons grave</b><small>livre · en cours d'écriture</small><span class="entrer">être prévenu·e</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="moment nuit" aria-labelledby="v-nuit">
+    <canvas id="etoiles" aria-hidden="true"></canvas>
+    <div class="dedans">
+      <div>
+        <p class="heure">la nuit</p>
+        <p class="verbe" id="v-nuit">s'émerveiller</p>
+        <p class="murmure">Nous sommes des poussières d'étoiles qui ont appris à s'émerveiller.</p>
+      </div>
+      <a class="lueur" href="https://vernetmarc-glitch.github.io/lheure-de-senivrer/" target="_blank" rel="noopener" style="--c:#a9bcff;--d:-3.1s">
+        <span class="feu" aria-hidden="true"></span><b>L'Heure de s'enivrer</b><small>l'univers entre vos doigts</small><span class="entrer">découvrir</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="moment minuit" aria-labelledby="v-minuit">
+    <div class="ondes" aria-hidden="true"></div>
+    <div class="dedans">
+      <div>
+        <p class="heure">minuit passé</p>
+        <p class="verbe" id="v-minuit"><i>écouter</i></p>
+        <p class="murmure">Des milliers, peut-être des millions de mondes. Et personne au bout du fil ? Un embryon de réflexion.</p>
+      </div>
+      <a class="lueur" href="https://vernetmarc-glitch.github.io/le-silence-du-cosmos/" target="_blank" rel="noopener" style="--c:#7fe3b4;--d:-4s">
+        <span class="feu" aria-hidden="true"></span><b>Le silence du cosmos</b><small>une galaxie à peupler</small><span class="entrer">tendre l'oreille</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="moment fin" aria-label="Un café, un mot">
+    <div class="dedans">
+      <p class="fil">Ça part dans tous les sens ? Du matin à minuit, c'est la même chose qu'on goûte : <em>la joie</em>.</p>
+      <p class="mot">Hello les loupiots. Une idée, un retour, un bout de chemin ensemble ou un moment de joie à raconter : écrivez-moi, je lis tout.</p>
+      <div class="boutons">
+        <a class="btn" href="mailto:contact.jasg@gmail.com?subject=Un%20mot%20pour%20JASG">un mot</a>
+      </div>
+      <p class="adresse"><code id="mail">contact.jasg@gmail.com</code><button class="copier" id="copier" type="button">copier</button></p>
+      <p class="signature">Moutchasse Graciasse ❤ Marc</p>
+      <p class="pied">Joie, amour et saucisses grillées · Éditions JASG</p>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const btn = document.getElementById('copier'), mail = document.getElementById('mail');
+  btn.addEventListener('click', () => {
+    const ok = () => { btn.textContent = 'copiée ✓'; setTimeout(() => btn.textContent = 'copier', 2200); };
+    const repli = () => { const r = document.createRange(); r.selectNodeContents(mail); const s = getSelection(); s.removeAllRanges(); s.addRange(r); };
+    try { navigator.clipboard.writeText(mail.textContent.trim()).then(ok, repli); } catch (e) { repli(); }
+  });
+
+  const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const champs = [
+    { cv: document.getElementById('braises'), monte: true, couleurs: ['#ffb36b', '#ffe0a8', '#ff7a3c'], densite: 5200 },
+    { cv: document.getElementById('etoiles'), monte: false, couleurs: ['#e6e8ff', '#ffd28a', '#a9bcff'], densite: 3800 }
+  ];
+  const neuve = (c, partout) => ({ x: Math.random() * c.W, y: partout ? Math.random() * c.H : c.H + 20, r: (Math.random() * (c.monte ? 1.8 : 1.1) + .4) * c.dpr,
+    v: (Math.random() * .4 + .15) * c.dpr, p: Math.random() * 6.28, k: Math.floor(Math.random() * c.couleurs.length) });
+  function tailles() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    for (const c of champs) {
+      const w = c.cv.clientWidth, h = c.cv.clientHeight; if (!w || !h) continue;
+      c.dpr = dpr; c.W = c.cv.width = Math.round(w * dpr); c.H = c.cv.height = Math.round(h * dpr); c.ctx = c.cv.getContext('2d');
+      c.pts = Array.from({ length: Math.round(Math.min(150, w * h / c.densite)) }, () => neuve(c, true));
+      dessine(c, 0);
+    }
+  }
+  function dessine(c, t) {
+    const g = c.ctx; if (!g) return; g.clearRect(0, 0, c.W, c.H);
+    for (const p of c.pts) {
+      const s = .5 + .5 * Math.sin(t / (c.monte ? 420 : 900) + p.p);
+      g.globalAlpha = c.monte ? (.1 + .8 * (p.y / c.H)) * s : .25 + .65 * s;
+      g.fillStyle = c.couleurs[p.k]; g.beginPath(); g.arc(p.x, p.y, p.r, 0, 6.283); g.fill();
+    }
+    g.globalAlpha = 1;
+  }
+  function anime(t) {
+    for (const c of champs) {
+      if (!c.ctx) continue;
+      if (c.monte) for (const p of c.pts) { p.y -= p.v; p.x += Math.sin(t / 1000 + p.p) * .3 * c.dpr; if (p.y < -10) Object.assign(p, neuve(c, false)); }
+      dessine(c, t);
+    }
+    requestAnimationFrame(anime);
+  }
+  addEventListener('resize', tailles);
+  tailles();
+  if (!calme) requestAnimationFrame(anime);
+})();
+</script>
+
+</body>
+</html>
