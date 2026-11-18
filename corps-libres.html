@@ -1,6 +1,13 @@
 <!doctype html>
 <html lang="fr">
 <head>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2b2440">
+<link rel="icon" href="icones/icone-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icones/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="JASG">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Corps libres · JASG</title>
@@ -58,5 +65,6 @@ h1{font:400 clamp(56px,11vw,112px)/.88 var(--f-titre);margin:0;letter-spacing:-.
   <p class="note">PDF, gratuit, à lire à l'écran ou à imprimer. À partager autant que vous voulez.</p>
   <p class="pied">Marc Vernet · Éditions JASG</p>
 </main>
+<script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}</script>
 </body>
 </html>
