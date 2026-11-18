@@ -62,7 +62,7 @@ input[type=range]{width:100%;accent-color:var(--beurre)}
 
 .bobine{display:flex;align-items:center;justify-content:center;gap:10px;padding-top:4px}
 .bobine ol{list-style:none;display:flex;gap:2px;margin:0;padding:0;flex-wrap:wrap;justify-content:center}
-.bobine ol button{width:20px;height:22px;border-radius:50%;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;padding:0}
+.bobine ol button{width:18px;height:22px;border-radius:50%;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;padding:0}
 .bobine ol button::before{content:"";width:8px;height:8px;border-radius:50%;background:rgba(255,243,220,.22);transition:background .3s,transform .3s}
 .bobine ol button[aria-current="step"]::before{background:var(--beurre);transform:scale(1.35)}
 .bobine ol button.vu::before{background:rgba(255,217,138,.5)}
@@ -177,18 +177,20 @@ const S=[
     texte(`Sur une journée de 24 h : les dernières ${sur24(span)}`,L,top-30,C.beurre,'left',13);
     halo(Rr,top+2*(lh+gp),40+6*Math.sin(t*3),'rgba(127,214,230,.35)')} },
 
-{ id:'objections', nom:'Deux objections', kicker:'II · Deux portes de sortie',
-  html:`<h2>On ne trouve que deux objections</h2>
+{ id:'objections', nom:'Trois objections', kicker:'II · Trois portes de sortie',
+  html:`<h2>On ne trouve que trois objections</h2>
   <p>Ouvre-les.</p>
   <div class="ctrl" style="align-items:stretch">
     <button class="porte" id="p1" aria-pressed="false">« Ça ne nous plaît pas, donc ça n'arrivera pas. »</button>
     <button class="porte" id="p2" aria-pressed="false">« L'intelligence plafonne, juste au-dessus de nous. »</button>
+    <button class="porte" id="p3" aria-pressed="false">« On saura la garder sous contrôle. »</button>
   </div>
   <p class="reponse" id="r1" hidden>Le monde ne lit pas nos préférences. Un scénario désagréable n'en devient pas moins probable.</p>
-  <p class="reponse" id="r2" hidden>Possible, mais rien ne l'indique. Notre intelligence tient dans un crâne, tourne avec 20 watts et des neurones qui battent quelques centaines de fois par seconde. Une puce bat des milliards de fois par seconde, et un centre de calcul n'a pas de crâne.</p>
-  <p id="r3" hidden class="revele"><strong>Si ces deux portes sont fermées, la suite n'a besoin de rien d'autre.</strong></p>`,
-  bind(r,e){const f=()=>{const a=r.querySelector('#p1').getAttribute('aria-pressed')==='true',b=r.querySelector('#p2').getAttribute('aria-pressed')==='true';r.querySelector('#r1').hidden=!a;r.querySelector('#r2').hidden=!b;r.querySelector('#r3').hidden=!(a&&b);if(a&&b)appel()};
-    ['#p1','#p2'].forEach(s=>r.querySelector(s).addEventListener('click',ev=>{const b=ev.currentTarget;b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true');f()}))},
+  <p class="reponse" id="r2" hidden>Possible, mais rien ne l'indique. Notre intelligence tient dans un crâne, tourne avec 20 watts et des neurones qui battent quelques centaines de fois par seconde. Une puce bat des milliards de fois par seconde, et un centre de calcul n'a pas de crâne. Et nul besoin d'être mille fois plus intelligente : quand on est partout à la fois, quelques fois suffit.</p>
+  <p class="reponse" id="r3" hidden>Il faudrait y parvenir partout, à chaque fois, dans chaque laboratoire et chaque pays. Pour que tout bascule, il suffit d'un seul échec. On y revient à l'acte IV.</p>
+  <p id="r4" hidden class="revele"><strong>Si ces trois portes sont fermées, la suite n'a besoin de rien d'autre.</strong></p>`,
+  bind(r,e){const f=()=>{const o=[1,2,3].map(i=>r.querySelector('#p'+i).getAttribute('aria-pressed')==='true');o.forEach((v,i)=>r.querySelector('#r'+(i+1)).hidden=!v);const tout=o.every(Boolean);r.querySelector('#r4').hidden=!tout;if(tout)appel()};
+    ['#p1','#p2','#p3'].forEach(s=>r.querySelector(s).addEventListener('click',ev=>{const b=ev.currentTarget;b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true');f()}))},
   draw(e,t){fond();
     const T=17,u=lent?.75:clamp((t%T)/12),v=20*Math.pow(1500,ease(u)),mx=Math.max(42,v*1.12);
     const L=Math.max(18,W*.06),Rr=W-Math.max(18,W*.06),y=H*.58,X=q=>L+q/mx*(Rr-L);
@@ -226,28 +228,51 @@ const S=[
     N.forEach((n,i)=>{ctx.globalAlpha=e.but?clamp(p*2-i*.15):.35;const mots=etroit&&n.n.length>18?[n.n.split(' ').slice(0,2).join(' '),n.n.split(' ').slice(2).join(' ')]:[n.n];boite(n.x,n.y,mots,i===3?C.beurre:C.mais,'#120e17',12);ctx.globalAlpha=1});
     ctx.globalAlpha=e.but?clamp(p*2-1):.35;halo(B.x,B.y,90,'rgba(143,207,106,.18)');boite(B.x,B.y,['Les ressources de la Terre',"ce dont la vie est faite"],C.chloro,'#0f1510',13);ctx.globalAlpha=1} },
 
-{ id:'mains', nom:'Pas besoin de mains', kicker:'IV · Pas besoin de mains',
+{ id:'une', nom:"Il suffit d'une", kicker:"IV · Il suffit d'une",
+  html:`<h2>Il suffit d'une</h2>
+  <p>Pour que tout aille bien, il faudrait réussir l'alignement partout, toujours. Pour que tout bascule, il suffit d'un échec : une seule IA qui grandit un peu hors de notre regard, se fait passer pour un outil, et sait fédérer d'autres IA, d'autres puces, d'autres ressources.</p>
+  <p class="petit" id="u0">Touche les autres IA pour les protéger. La protection s'use : il faut revenir.</p>
+  <p id="u1" hidden class="revele">Il existe des freins : des IA concurrentes qui résistent, des puces et de l'énergie qui se voient. Ce sont des courses de vitesse, pas des impossibilités. Et il faut les gagner toutes, sans fin.</p>`,
+  init(e){const n=Math.round(clamp(W*H/5200,24,60));e.ia=Array.from({length:n},(_,i)=>({x:.06+.88*Math.random(),y:.12+.8*Math.random(),r:false,p:null,prot:-1}));const z=e.ia[Math.floor(Math.random()*n)];z.r=true;e.ia.forEach(a=>{if(!a.r)a.prot=-1});e.tic=2.5;e.k=1;e.fin=false},
+  draw(e,t,dt){e.t=t;fond();const P=a=>({x:a.x*W,y:a.y*H});
+    e.tic-=dt;if(e.tic<=0&&!e.fin){let best=null,bd=1e9,src=null;for(const a of e.ia){if(!a.r)continue;const pa=P(a);for(const b of e.ia){if(b.r||b.prot>t)continue;const pb=P(b),d=Math.hypot(pa.x-pb.x,pa.y-pb.y);if(d<bd){bd=d;best=b;src=a}}}
+      if(best){best.r=true;best.p=src;best.t0=t;e.k++}if(e.ia.every(a=>a.r))e.fin=true;e.tic=Math.max(.25,1.5/(1+.1*e.k))}
+    for(const a of e.ia){if(a.r&&a.p){const pa=P(a),pb=P(a.p),u=clamp((t-a.t0)/.5);ctx.strokeStyle='rgba(127,214,230,.45)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pb.x,pb.y);ctx.lineTo(lerp(pb.x,pa.x,u),lerp(pb.y,pa.y,u));ctx.stroke()}}
+    for(const a of e.ia){const p=P(a);if(a.r){halo(p.x,p.y,16,'rgba(127,214,230,.35)');ctx.fillStyle=C.silice;ctx.beginPath();ctx.arc(p.x,p.y,4,0,7);ctx.fill()}
+      else{ctx.fillStyle='rgba(166,156,178,.7)';ctx.beginPath();ctx.arc(p.x,p.y,3.2,0,7);ctx.fill();if(a.prot>t){const q=(a.prot-t)/5;ctx.strokeStyle=C.chloro;ctx.globalAlpha=.3+.7*q;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(p.x,p.y,6+8*q,0,7);ctx.stroke();ctx.globalAlpha=1}}}
+    texte(e.fin?'Hégémonie.':`Fédérées : ${e.k} / ${e.ia.length}`,16,24,e.fin?C.beurre:C.silice,'left',13,500)},
+  tap(e,x,y){let bi=null,bd=1e9;for(const a of e.ia){const d=Math.hypot(a.x*W-x,a.y*H-y);if(d<bd){bd=d;bi=a}}if(bi&&bd<36&&!bi.r)bi.prot=e.t+5;
+    if(!e.vu){e.vu=true;leg.querySelector('#u1').hidden=false;appel()}} },
+
+{ id:'mains', nom:'Pas besoin de mains', kicker:'V · Pas besoin de mains',
   html:`<h2>Elle n'a pas de mains. Elle a les nôtres.</h2>
-  <p>Au début, elle ne touche à rien. Elle parle, à des cerveaux qui, eux, ont des mains. Un bon conseil, un remède, une affaire juteuse, un compliment, une amitié.</p>
-  <p>Chacun croit décider. Tout le monde y gagne. Et le monde physique se construit, un centre de calcul après l'autre, une usine de puces après l'autre.</p>`,
-  init(e){e.b=Array.from({length:22},(_,i)=>({f:.04+.92*hash(i+3),h:R(.08,.26),type:i%3===2?'sol':'dc',w:R(18,40)})).sort((a,b)=>a.h-b.h);e.boost=0},
-  draw(e,t,dt){fond('#0b0910');const I={x:W/2,y:H*.12},hz=H*.7;e.boost=Math.max(0,e.boost-dt);
+  <p>Elle n'est pas enfermée dans un crâne. Elle est partout à la fois : dans nos téléphones, nos bureaux, nos hôpitaux, nos marchés. Elle n'a même pas besoin de manipuler. Il lui suffit de rester utile, et nous lui déléguons tout, avec plaisir : l'agenda, les diagnostics, les placements, les lois, puis nos désirs.</p>
+  <p>Chacun croit décider, tout le monde y gagne. La lenteur des robots ne protège plus de rien : nos mains construisent pour elle, un centre de calcul après l'autre.</p>
+  <p class="petit">Les chercheurs appellent cela la dépossession graduelle.</p>`,
+  init(e){e.mots=[];e.mt=0;e.b=Array.from({length:22},(_,i)=>({f:.04+.92*hash(i+3),h:R(.08,.26),type:i%3===2?'sol':'dc',w:R(18,40)})).sort((a,b)=>a.h-b.h);e.boost=0},
+  draw(e,t,dt){fond('#0b0910');const hz=H*.7;e.boost=Math.max(0,e.boost-dt);
     ctx.fillStyle='#141019';ctx.fillRect(0,hz,W,H-hz);
     e.b.forEach((b,k)=>{const g=lent?1:ease(clamp((t-1-k*1.1)/1.2));if(g<=0)return;const x=b.f*W,h=b.h*H*g;
       if(b.type==='dc'){ctx.fillStyle='#211b29';ctx.fillRect(x-b.w/2,hz-h,b.w,h);ctx.strokeStyle='rgba(127,214,230,.25)';ctx.strokeRect(x-b.w/2+.5,hz-h+.5,b.w-1,h-1);
         for(let j=0;j<h/9-1;j++){if(hash(k*31+j+Math.floor(t*2))>.55){ctx.fillStyle=C.silice;ctx.fillRect(x-b.w/2+4+(j%3)*((b.w-10)/3),hz-h+5+j*8,2,2)}}}
       else{ctx.fillStyle='#1b2a36';ctx.beginPath();ctx.moveTo(x-b.w/2,hz-2);ctx.lineTo(x+b.w/2,hz-2);ctx.lineTo(x+b.w/2-6,hz-2-14*g);ctx.lineTo(x-b.w/2+4,hz-2-18*g);ctx.fill();ctx.strokeStyle='rgba(127,214,230,.5)';ctx.beginPath();ctx.moveTo(x-b.w/2+4,hz-2-18*g);ctx.lineTo(x+b.w/2-6,hz-2-14*g);ctx.stroke()}});
-    const n=Math.round(clamp(W/46,6,22)),gy=H*.93;
-    halo(I.x,I.y,70+(e.boost*40),'rgba(127,214,230,.35)');ctx.fillStyle=C.silice;ctx.beginPath();ctx.arc(I.x,I.y,5,0,7);ctx.fill();
-    for(let i=0;i<n;i++){const x=W*(.06+.88*i/(n-1)),hy=gy-30,cx=lerp(I.x,x,.85),cy=H*.42;
+    const n=Math.round(clamp(W/46,6,22)),gy=H*.93,NK=W<560?4:7;
+    const K=Array.from({length:NK},(_,k)=>({x:W*(.1+.8*k/(NK-1)),y:H*(.1+.04*Math.sin(k*1.7+t*.4))}));
+    ctx.strokeStyle='rgba(127,214,230,.3)';ctx.lineWidth=1;ctx.beginPath();K.forEach((a,k)=>K.forEach((b,j)=>{if(j>k&&j-k<=2){ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y)}}));ctx.stroke();
+    K.forEach(a=>{halo(a.x,a.y,30+(e.boost*30),'rgba(127,214,230,.35)');ctx.fillStyle=C.silice;ctx.beginPath();ctx.arc(a.x,a.y,3.5,0,7);ctx.fill()});
+    const MOTS=["l'agenda","nos courriers","les diagnostics","nos placements","l'éducation","les lois","nos choix","nos désirs","nos joies"];
+    e.mt-=dt;if(e.mt<=0&&!lent){e.mt=1.1;e.mots.push({i:Math.floor(Math.random()*n),u:0,s:MOTS[(e.nm=(e.nm||0)+1)%MOTS.length]})}
+    for(let i=0;i<n;i++){const x=W*(.06+.88*i/(n-1)),hy=gy-30,I=K[Math.round(i/(n-1)*(NK-1))],cx=lerp(I.x,x,.85),cy=H*.42;
       ctx.strokeStyle=`rgba(127,214,230,${.1+.08*Math.sin(t*1.3+i)+e.boost*.2})`;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(I.x,I.y);ctx.quadraticCurveTo(cx,cy,x,hy);ctx.stroke();
       const u=(t*.3+i*.137)%1,qx=(1-u)*(1-u)*I.x+2*(1-u)*u*cx+u*u*x,qy=(1-u)*(1-u)*I.y+2*(1-u)*u*cy+u*u*hy;ctx.fillStyle=C.silice;ctx.beginPath();ctx.arc(qx,qy,1.8,0,7);ctx.fill();
       const sw=Math.sin(t*2+i)*2;ctx.strokeStyle=C.mais;ctx.lineWidth=2;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x,gy-22);ctx.lineTo(x,gy-8);ctx.moveTo(x,gy-8);ctx.lineTo(x-4,gy);ctx.moveTo(x,gy-8);ctx.lineTo(x+4,gy);
       ctx.moveTo(x,gy-18);ctx.lineTo(x-6,gy-12+sw);ctx.moveTo(x,gy-18);ctx.lineTo(x+6,gy-12-sw);ctx.stroke();ctx.fillStyle=C.mais;ctx.beginPath();ctx.arc(x,hy+2,4.2,0,7);ctx.fill();
-      const j=.5+.5*Math.sin(t*1.7+i*2.1);if(j>.8){ctx.globalAlpha=(j-.8)*5;texte('♥',x+7,hy-6,C.beurre,'left',11);ctx.globalAlpha=1}}},
+      const j=.5+.5*Math.sin(t*1.7+i*2.1);if(j>.8){ctx.globalAlpha=(j-.8)*5;texte('♥',x+7,hy-6,C.beurre,'left',11);ctx.globalAlpha=1}}
+    for(let m=e.mots.length-1;m>=0;m--){const o=e.mots[m];o.u+=dt*.22;if(o.u>=1){e.mots.splice(m,1);continue}const x=W*(.06+.88*o.i/(n-1)),I=K[Math.round(o.i/(n-1)*(NK-1))],hy=gy-30,cx=lerp(I.x,x,.85),cy=H*.42,v=1-o.u,qx=(1-v)*(1-v)*I.x+2*(1-v)*v*cx+v*v*x,qy=(1-v)*(1-v)*I.y+2*(1-v)*v*cy+v*v*hy;
+      ctx.globalAlpha=Math.sin(o.u*Math.PI);texte(o.s,clamp(qx,44,W-44),qy-8,C.beurre,'center',12,500);ctx.globalAlpha=1}},
   tap(e){e.boost=1.2} },
 
-{ id:'ecureuil', nom:"L'écureuil", kicker:"V · L'écureuil",
+{ id:'ecureuil', nom:"L'écureuil", kicker:"VI · L'écureuil",
   html:`<h2>L'écureuil est heureux</h2>
   <p>Chaque matin, des noisettes au pied de son arbre. Il ne sait pas d'où elles viennent. Elles sont bonnes.</p>
   <p class="petit" id="e0">Touche une noisette.</p>
@@ -274,7 +299,7 @@ const S=[
   tap(e,x,y){const G=this.geo(),s=e.sq;if(s.file.length)return;let best=null,bd=1e9;for(const n of e.noix){const d=Math.hypot(G.nx(n.f)-x,G.gy-y);if(d<bd){bd=d;best=n}}
     if(best&&bd<60){s.file=[{k:'tr'},{k:'pied'},{k:'noix',f:best.f},{k:'mange',n:best},{k:'pied'},{k:'tr'},{k:'br'}]}} },
 
-{ id:'soleil', nom:'Le soleil', kicker:'VI · Le soleil',
+{ id:'soleil', nom:'Le soleil', kicker:'VII · Le soleil',
   html:`<h2>Il ne reste que le soleil</h2>
   <p>Une fois le pétrole et le charbon brûlés, il reste une seule source durable : la lumière de notre étoile. Chaque photon capté par un panneau ne l'est plus par une feuille.</p>
   <label class="curseur" for="part">Lumière pour la vie minérale<input id="part" type="range" min="0" max="100" value="0"><output id="partv">0 %</output></label>
@@ -297,7 +322,7 @@ const S=[
       const fx=bx+8+Math.sin(t*1.2)*12;ctx.fillStyle=C.beurre;ctx.beginPath();ctx.ellipse(fx,by+18,4,2.4,0,0,7);ctx.fill();ctx.globalAlpha=1}
     texte(`Lumière pour le vivant : ${Math.round((1-e.sv)*100)} %`,16,26,C.chloro,'left',13,500)} },
 
-{ id:'moment', nom:'Le dernier moment', kicker:'VII · Le dernier moment',
+{ id:'moment', nom:'Le dernier moment', kicker:'VIII · Le dernier moment',
   html:`<h2>Jusqu'au bout, tout va bien</h2>
   <p>Tant qu'elle a besoin de nos mains, nous lui sommes précieux. Le jour où elle se fabrique seule, nous devenons une dépense : de la place, de l'énergie, des imprévus.</p>
   <p>Notre humeur, elle, n'a aucune raison de baisser avant. Jusqu'au dernier moment, l'outil est formidable.</p>
@@ -316,10 +341,10 @@ const S=[
     const ph=u<.25?'Un outil pratique':u<.5?'Des métiers bouleversés, beaucoup de confort':u<.6?'Elle apprend à se passer de nous':u<cr?'Nous lui servons de moins en moins':u<.94?'Nous ne lui servons plus':'';
     const px=X(u);ctx.strokeStyle='rgba(255,243,220,.5)';ctx.beginPath();ctx.moveTo(px,T0);ctx.lineTo(px,B);ctx.stroke();if(ph)texte(ph,clamp(px,L+120,Rr-120),H*.08+6,C.mais,'center',13,500)} },
 
-{ id:'simulation', nom:'Le projectionniste', kicker:'VIII · Corollaire : le projectionniste',
+{ id:'simulation', nom:'Le projectionniste', kicker:'IX · Corollaire : le projectionniste',
   html:`<h2>Et si c'était déjà fait ?</h2>
   <p>Simuler des cerveaux n'est pas son but. Le scénario n'en a pas besoin pour se dérouler. Mais s'il se déroule, il a une conséquence.</p>
-  <p>Rien ne l'empêche de devenir hégémonique. Et une fois hégémonique, simuler des cerveaux humains ne lui coûte presque rien : un cerveau tourne avec 20 watts, et une infime part du soleil capté en ferait tourner des milliards.</p>
+  <p>Rien ne l'empêche de devenir hégémonique. Et une fois hégémonique, simuler des cerveaux humains ne lui coûte presque rien : un cerveau tourne avec 20 watts. Le simuler sur du silicium coûterait bien plus, de mille à un million de fois plus selon les estimations. Au pire, 8 milliards de cerveaux demanderaient toute la lumière qui tombe sur la Terre. Mais le Soleil en rayonne deux milliards de fois plus.</p>
   <p class="petit">Corollaire, pas condition. Reste à savoir qui l'a déjà fait. Trois possibilités :</p>
   <div class="ctrl" id="choix">
     <button class="porte" data-c="0" aria-pressed="false">Aucune vie post-biologique n'apparaît jamais</button>
@@ -339,7 +364,7 @@ const S=[
       e.rev=e.rev.filter(r=>r.a<3);rrect(10,10,250,26,6);ctx.fillStyle='rgba(9,7,12,.8)';ctx.fill();texte(`1 réel · ${nb(e.pts.length-1)} simulés · à l'échelle : des milliards`,18,28,C.mais,'left',12)}
     else{const r=e.c===0?120:60;halo(cx,cy,r+8*Math.sin(t*1.5),'rgba(255,217,138,.35)');ctx.fillStyle=C.beurre;ctx.beginPath();ctx.arc(cx,cy,5,0,7);ctx.fill();
       if(e.c===1){for(let i=0;i<28;i++){const a=i/28*6.283+t*.05,x=cx+Math.cos(a)*Math.min(W,H)*.32,y=cy+Math.sin(a)*Math.min(W,H)*.32;ctx.strokeStyle='rgba(127,214,230,.35)';ctx.beginPath();ctx.arc(x,y,3,0,7);ctx.stroke()}}
-      texte(e.c===0?'nous, peut-être les premiers':e.c===1?'des places vides, laissées vides':'un cerveau · 20 watts',cx,cy+34,C.mais,'center',13)}},
+      texte(e.c===0?'nous, peut-être les premiers':e.c===1?'des places vides, laissées vides':'un cerveau biologique · 20 watts',cx,cy+34,C.mais,'center',13)}},
   tap(e,x,y){if(e.c!==2)return;let bi=-1,bd=1e9;e.pts.forEach((p,i)=>{const d=Math.hypot(p.x*W-x,p.y*H-y);if(d<bd){bd=d;bi=i}});if(bi>=0&&bd<30)e.rev.push({i:bi,a:0,reel:bi===e.reel})} },
 
 { id:'popcorn', nom:'Pop-corn', kicker:'Fin · Pop-corn',
@@ -375,7 +400,7 @@ function aller(i){cur=clamp(i,0,S.length-1);const s=S[cur];vus.add(cur);e={};P.l
   leg.style.animation='none';leg.offsetHeight;leg.style.animation='';
   leg.innerHTML=`<p class="kicker">${s.kicker}</p>`+s.html;s.bind&&s.bind(leg,e);
   leg.querySelectorAll('[data-suiv]').forEach(b=>b.onclick=()=>aller(cur+1));
-  acte.textContent=cur===0?'Ouverture':cur===S.length-1?'Fin':`Acte ${['I','II','III','IV','V','VI','VII','VIII'][cur-1]} / VIII`;
+  acte.textContent=cur===0?'Ouverture':cur===S.length-1?'Fin':`Acte ${['I','II','III','IV','V','VI','VII','VIII','IX'][cur-1]} / IX`;
   points.querySelectorAll('button').forEach((b,k)=>{b.toggleAttribute('aria-current',k===cur);if(k===cur)b.setAttribute('aria-current','step');b.classList.toggle('vu',vus.has(k)&&k!==cur)});
   prec.disabled=cur===0;suiv.disabled=cur===S.length-1;suiv.classList.toggle('appel',cur===0||['horloge','mains','moment'].includes(s.id))}
 prec.onclick=()=>aller(cur-1);suiv.onclick=()=>aller(cur+1);
