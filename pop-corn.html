@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Pop-corn</title>
+<meta name="description" content="Pop-corn : un scénario en dix actes sur le passage de la vie biologique à la vie minérale, à regarder au premier rang.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500&family=Caveat:wght@500;600&display=swap">
+<style>
+/* Une salle de cinéma à minuit passé : l'écran (canvas) en haut, les sous-titres dessous, la bobine en pied. Un seul monde visuel, sombre. */
+:root{
+  --salle:#0e0b12;      /* le noir de la salle */
+  --velours:#1a1320;    /* sièges, surfaces */
+  --mais:#fff3dc;       /* texte, pop-corn */
+  --beurre:#ffd98a;     /* accent chaud */
+  --cerise:#d8423a;     /* rayures du paquet */
+  --silice:#7fd6e6;     /* la vie minérale */
+  --chloro:#8fcf6a;     /* la vie biologique */
+  --brume:#a69cb2;      /* texte secondaire */
+  --f-titre:"DM Serif Display",Didot,"Bodoni 72",Georgia,serif;
+  --f-texte:"Outfit","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-main:"Caveat","Segoe Print","Bradley Hand",cursive;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--salle);color:var(--mais);font-family:var(--f-texte);font-weight:300;-webkit-font-smoothing:antialiased}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--beurre);outline-offset:3px;border-radius:6px}
+a{color:var(--beurre)}
+
+.salle{min-height:100%;display:grid;grid-template-rows:auto minmax(280px,1fr) auto auto;gap:14px;
+  padding-block:14px 12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  max-width:1180px;margin-inline:auto}
+.haut{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--brume)}
+.haut b{font:italic 400 20px var(--f-titre);letter-spacing:0;text-transform:none;color:var(--beurre)}
+.ecran{position:relative;border-radius:6px;overflow:hidden;background:#09070c;
+  box-shadow:0 0 0 1px rgba(255,217,138,.08),0 30px 80px -30px rgba(255,217,138,.18);min-height:280px}
+.ecran canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:manipulation;cursor:pointer}
+
+.legende{max-width:64ch;width:100%;margin-inline:auto;min-height:12.5em;display:grid;align-content:start;gap:10px;animation:entre .7s ease both}
+@keyframes entre{from{opacity:.0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.kicker{margin:0;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--beurre);opacity:.85}
+.legende h2{margin:0;font:400 clamp(26px,4.2vw,40px)/1.05 var(--f-titre);text-wrap:balance}
+.legende h2.grand{font-size:clamp(56px,11vw,120px);line-height:.9;color:var(--beurre)}
+.legende p{margin:0;font-size:clamp(16px,1.7vw,18px);line-height:1.55;text-wrap:pretty}
+.legende .petit{font-size:14px;color:var(--brume)}
+.legende .main{font:600 30px/1 var(--f-main);color:var(--beurre)}
+.revele{animation:entre .8s ease both}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.puce,.porte,.action{border:1px solid rgba(255,243,220,.28);background:rgba(255,243,220,.04);border-radius:999px;padding:8px 14px;font-size:14px;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.puce:hover,.porte:hover,.action:hover{border-color:var(--beurre)}
+.puce[aria-pressed="true"],.porte[aria-pressed="true"]{background:var(--beurre);color:var(--salle);border-color:var(--beurre)}
+.action{background:var(--beurre);color:var(--salle);border-color:var(--beurre);font-weight:500}
+.porte{border-radius:10px;text-align:left;max-width:100%}
+.reponse{border-left:1px solid var(--beurre);padding-left:12px}
+.curseur{display:grid;grid-template-columns:auto minmax(0,1fr) 4.5ch;gap:12px;align-items:center;font-size:14px;color:var(--brume)}
+.curseur output{font-variant-numeric:tabular-nums;color:var(--mais);text-align:right}
+input[type=range]{width:100%;accent-color:var(--beurre)}
+
+.bobine{display:flex;align-items:center;justify-content:center;gap:10px;padding-top:4px}
+.bobine ol{list-style:none;display:flex;gap:2px;margin:0;padding:0;flex-wrap:wrap;justify-content:center}
+.bobine ol button{width:20px;height:22px;border-radius:50%;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;padding:0}
+.bobine ol button::before{content:"";width:8px;height:8px;border-radius:50%;background:rgba(255,243,220,.22);transition:background .3s,transform .3s}
+.bobine ol button[aria-current="step"]::before{background:var(--beurre);transform:scale(1.35)}
+.bobine ol button.vu::before{background:rgba(255,217,138,.5)}
+.fleche{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,243,220,.25);background:transparent;cursor:pointer;font-size:18px}
+.fleche:hover{border-color:var(--beurre)}
+.fleche:disabled{opacity:.25;cursor:default}
+.fleche.appel{animation:appel 1.6s ease-in-out infinite;border-color:var(--beurre)}
+@keyframes appel{50%{box-shadow:0 0 0 7px rgba(255,217,138,.14)}}
+@media (min-width:900px){.salle{grid-template-rows:auto minmax(380px,1fr) auto auto}}
+@media (prefers-reduced-motion:reduce){.legende,.revele,.fleche.appel{animation:none}}
+</style>
+</head>
+<body>
+
+<div class="salle">
+  <header class="haut"><b>Pop-corn</b><span id="acte">Ouverture</span></header>
+  <div class="ecran" id="ecran"><canvas id="cv" aria-label="Animation de l'acte en cours"></canvas></div>
+  <section class="legende" id="legende" aria-live="polite"></section>
+  <nav class="bobine" aria-label="Actes">
+    <button class="fleche" id="prec" aria-label="Acte précédent">←</button>
+    <ol id="points"></ol>
+    <button class="fleche" id="suiv" aria-label="Acte suivant">→</button>
+  </nav>
+</div>
+
+<script>
+(()=>{
+const ecran=document.getElementById('ecran'),cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+const leg=document.getElementById('legende'),acte=document.getElementById('acte');
+let W=300,H=300;
+function taille(){const r=ecran.getBoundingClientRect(),d=Math.min(2,window.devicePixelRatio||1);W=Math.max(1,r.width);H=Math.max(1,r.height);cv.width=Math.round(W*d);cv.height=Math.round(H*d);ctx.setTransform(d,0,0,d,0,0)}
+new ResizeObserver(taille).observe(ecran);taille();
+
+const C={beurre:'#ffd98a',mais:'#fff3dc',cerise:'#d8423a',silice:'#7fd6e6',chloro:'#8fcf6a',brume:'#a69cb2',noir:'#09070c'};
+const R=(a,b)=>a+Math.random()*(b-a);
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const lerp=(a,b,u)=>a+(b-a)*u;
+const ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
+const sm=(a,b,x)=>{x=clamp((x-a)/(b-a));return x*x*(3-2*x)};
+const hash=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s)};
+const lent=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const police=(px,w=400,f='Outfit, system-ui, sans-serif')=>ctx.font=`${w} ${px}px ${f}`;
+const serif=px=>ctx.font=`400 ${px}px "DM Serif Display", Georgia, serif`;
+const nb=n=>n.toLocaleString('fr-FR');
+function fond(c='#09070c'){ctx.fillStyle=c;ctx.fillRect(0,0,W,H)}
+function texte(s,x,y,col=C.mais,al='left',px=13,w=400){police(px,w);ctx.fillStyle=col;ctx.textAlign=al;ctx.textBaseline='alphabetic';ctx.fillText(s,x,y)}
+function halo(x,y,r,col,a=1){const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,col);g.addColorStop(1,'rgba(0,0,0,0)');ctx.globalAlpha=a;ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();ctx.globalAlpha=1}
+function rrect(x,y,w,h,r){ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,h,r):ctx.rect(x,y,w,h)}
+
+/* ---------- pop-corn ---------- */
+const BL=[[0,0,1],[.7,-.3,.75],[-.6,-.4,.7],[.2,.65,.7],[-.5,.5,.6],[.65,.45,.55]];
+function popcorn(x,y,r,rot,a=1){ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.globalAlpha=a;
+  ctx.fillStyle='#e9d3a8';for(const[b,c,s]of BL){ctx.beginPath();ctx.arc(b*r+.8,c*r+.8,s*r,0,7);ctx.fill()}
+  ctx.fillStyle=C.mais;for(const[b,c,s]of BL){ctx.beginPath();ctx.arc(b*r,c*r,s*r*.92,0,7);ctx.fill()}
+  ctx.fillStyle=C.beurre;ctx.beginPath();ctx.arc(.15*r,.15*r,.32*r,0,7);ctx.fill();ctx.restore()}
+function paquet(x,y,s){const wT=74*s,wB=54*s,h=92*s;ctx.save();ctx.translate(x,y);
+  for(let i=0;i<16;i++){const a=i*2.399;popcorn(Math.cos(a)*wT*.42*((i%4)/3+.15),-h-4*s-Math.abs(Math.sin(a*1.3))*16*s,10.5*s,a)}
+  ctx.beginPath();ctx.moveTo(-wT/2,-h);ctx.lineTo(wT/2,-h);ctx.lineTo(wB/2,0);ctx.lineTo(-wB/2,0);ctx.closePath();ctx.save();ctx.clip();
+  ctx.fillStyle=C.mais;ctx.fillRect(-wT,-h,wT*2,h);ctx.fillStyle=C.cerise;
+  for(let k=-3;k<=3;k+=1){if(k%2)continue;ctx.beginPath();ctx.moveTo(k*wT/7-wT/14,-h);ctx.lineTo(k*wT/7+wT/14,-h);ctx.lineTo(k*wB/7+wB/14,0);ctx.lineTo(k*wB/7-wB/14,0);ctx.fill()}
+  ctx.restore();ctx.restore()}
+const P=[];
+function eclat(x,y,n,f=1){for(let i=0;i<n;i++){const a=R(0,6.283),v=R(50,240)*f;P.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-70*f,r:R(5,9.5),rot:R(0,6),vr:R(-4,4),life:R(2.2,3.6),age:0})}}
+function bond(x,y){P.push({x:x+R(-14,14),y,vx:R(-50,50),vy:R(-330,-200),r:R(5,8),rot:R(0,6),vr:R(-5,5),life:R(1.8,2.6),age:0})}
+function parts(dt){for(let i=P.length-1;i>=0;i--){const p=P[i];p.age+=dt;p.vy+=300*dt;p.vx*=.995;p.x+=p.vx*dt;p.y+=p.vy*dt;p.rot+=p.vr*dt;if(p.age>p.life||p.y>H+40)P.splice(i,1)}
+  for(const p of P)popcorn(p.x,p.y,p.r,p.rot,clamp(1-Math.pow(p.age/p.life,3)))}
+
+const fmt=y=>y>=1e9?`${nb(+(y/1e9).toFixed(1))} milliard${y>=2e9?'s':''} d'années`:y>=1e6?`${nb(Math.round(y/1e6))} millions d'années`:y>=1e4?`${nb(Math.round(y/1e3)*1e3)} ans`:`${nb(Math.round(y))} ans`;
+const AGE=4.54e9;
+function sur24(y){const s=y/AGE*86400;if(s>=3600)return`${(s/3600).toFixed(1).replace('.',',')} h`;if(s>=60)return`${Math.round(s/60)} min`;if(s>=1)return`${s.toFixed(1).replace('.',',')} s`;return`${(s*1000).toFixed(1).replace('.',',')} ms`}
+
+/* ---------- les actes ---------- */
+const S=[
+{ id:'ouverture', nom:'Ouverture', kicker:'Un projet JASG · au premier rang',
+  html:`<h2 class="grand">Pop-corn</h2>
+  <p>Depuis 4,5 milliards d'années, la vie sur Terre est faite de carbone. Elle est peut-être sur le point de changer de matière. Et nous sommes dans la salle.</p>
+  <p class="petit">Un scénario, pas une prophétie. Garde ton regard critique. Et ton paquet.</p>
+  <div class="ctrl"><button class="action" data-suiv>Entrer dans la salle</button></div>`,
+  init(e){e.mote=Array.from({length:70},()=>({x:Math.random(),y:Math.random(),v:R(.004,.015),r:R(.5,1.6)}));e.n=0},
+  draw(e,t,dt){fond();
+    const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'rgba(255,230,180,.16)');g.addColorStop(1,'rgba(255,230,180,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(W/2-14,0);ctx.lineTo(W/2+14,0);ctx.lineTo(W*.92,H);ctx.lineTo(W*.08,H);ctx.fill();
+    for(const m of e.mote){m.y-=m.v*dt;if(m.y<0)m.y=1;const x=m.x*W+Math.sin(t*.5+m.y*9)*6;ctx.fillStyle=`rgba(255,243,220,${.25*(1-Math.abs(x-W/2)/(W/2))})`;ctx.beginPath();ctx.arc(x,m.y*H,m.r,0,7);ctx.fill()}
+    const s=Math.min(W,H)/300,by=H-14*s;halo(W/2,by-60*s,170*s,'rgba(255,217,138,.18)');
+    e.n+=dt;if(e.n>.45&&!lent){e.n=0;bond(W/2,by-100*s)}
+    parts(dt);paquet(W/2,by,s)},
+  tap(e,x,y){eclat(x,y,10,.8)} },
+
+{ id:'horloge', nom:"L'horloge", kicker:"I · L'horloge",
+  html:`<h2>On arrive pile à la fin du film</h2>
+  <p>Si l'histoire de la Terre tenait en une journée, les dinosaures régneraient de 22 h 47 à 23 h 39. Nous arriverions à 23 h 59 et 54 secondes. La première puce en silicium, à la dernière milliseconde.</p>
+  <label class="curseur" for="zoom">Zoomer vers aujourd'hui<input id="zoom" type="range" min="0" max="1000" value="0"><output id="zoomv">×1</output></label>`,
+  init(e){e.z=0;e.touche=false},
+  bind(r,e){const z=r.querySelector('#zoom');e.sl=z;e.out=r.querySelector('#zoomv');z.addEventListener('input',()=>{e.touche=true;e.z=z.value/1000})},
+  draw(e,t){fond();
+    if(!e.touche){e.z=lent?.6:ease(clamp((t-1.2)/14));e.sl.value=Math.round(e.z*1000)}
+    const span=Math.pow(10,lerp(Math.log10(AGE),Math.log10(110),e.z));e.out.textContent=span>AGE*.9?'×1':'×'+(AGE/span>=1e6?(AGE/span/1e6).toFixed(0)+' M':nb(Math.round(AGE/span)));
+    const L=Math.max(16,W*.05),Rr=W-Math.max(16,W*.05),X=a=>L+(1-a/span)*(Rr-L);
+    const lanes=[['Vie biologique',3.8e9,0,C.chloro],['Dinosaures',2.3e8,6.6e7,'#e0a458'],['Humains',3e5,0,C.mais],['Silicium',68,0,C.silice]];
+    const top=H*.17,lh=Math.max(10,Math.min(20,H*.045)),gp=Math.max(18,H*.06);
+    lanes.forEach((ln,i)=>{const y=top+i*(lh+gp);texte(ln[0],L,y-6,C.brume,'left',12);
+      ctx.fillStyle='rgba(255,243,220,.05)';ctx.fillRect(L,y,Rr-L,lh);
+      if(ln[2]<span){const a=X(Math.min(ln[1],span)),b=X(ln[2]),w=Math.max(2,b-a);ctx.fillStyle=ln[3];ctx.globalAlpha=.85;ctx.fillRect(Math.min(a,b-2),y,w,lh);ctx.globalAlpha=1;
+        if(w<6)halo(b,y+lh/2,22,ln[3],.6)}});
+    const ay=top+4*(lh+gp)+8;ctx.strokeStyle='rgba(255,243,220,.3)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(L,ay);ctx.lineTo(Rr,ay);ctx.stroke();
+    const ev=[[4.54e9,'Naissance de la Terre'],[3.8e9,'Premières cellules'],[2.4e9,"L'oxygène"],[5.4e8,'Explosion du vivant'],[6.6e7,'La météorite'],[3e5,'Homo sapiens'],[1.2e4,'Agriculture'],[5.2e3,'Écriture'],[260,'Machine à vapeur'],[81,'Premier ordinateur'],[68,'Puce en silicium'],[4,'IA qui parle']];
+    const last=[-1e9,-1e9];let k=0;police(12);
+    for(const[a,n]of ev){if(a>span*1.0001)continue;const x=X(a);const row=k%2;const w=ctx.measureText(n).width;
+      ctx.strokeStyle='rgba(255,243,220,.45)';ctx.beginPath();ctx.moveTo(x,ay-4);ctx.lineTo(x,ay+4);ctx.stroke();
+      if(x-last[row]>w+16){const al=x>W-w-20?'right':x<L+w/2?'left':'center';texte(n,x,ay+20+row*16,a<100?C.silice:C.mais,al,12);last[row]=x+(al==='center'?w/2:al==='left'?w:0)}k++}
+    texte('il y a '+fmt(span),L,H-14,C.brume,'left',12);texte('maintenant',Rr,H-14,C.beurre,'right',12,500);
+    texte(`Sur une journée de 24 h : les dernières ${sur24(span)}`,L,top-30,C.beurre,'left',13);
+    halo(Rr,top+2*(lh+gp),40+6*Math.sin(t*3),'rgba(127,214,230,.35)')} },
+
+{ id:'objections', nom:'Deux objections', kicker:'II · Deux portes de sortie',
+  html:`<h2>On ne trouve que deux objections</h2>
+  <p>Ouvre-les.</p>
+  <div class="ctrl" style="align-items:stretch">
+    <button class="porte" id="p1" aria-pressed="false">« Ça ne nous plaît pas, donc ça n'arrivera pas. »</button>
+    <button class="porte" id="p2" aria-pressed="false">« L'intelligence plafonne, juste au-dessus de nous. »</button>
+  </div>
+  <p class="reponse" id="r1" hidden>Le monde ne lit pas nos préférences. Un scénario désagréable n'en devient pas moins probable.</p>
+  <p class="reponse" id="r2" hidden>Possible, mais rien ne l'indique. Notre intelligence tient dans un crâne, tourne avec 20 watts et des neurones qui battent quelques centaines de fois par seconde. Une puce bat des milliards de fois par seconde, et un centre de calcul n'a pas de crâne.</p>
+  <p id="r3" hidden class="revele"><strong>Si ces deux portes sont fermées, la suite n'a besoin de rien d'autre.</strong></p>`,
+  bind(r,e){const f=()=>{const a=r.querySelector('#p1').getAttribute('aria-pressed')==='true',b=r.querySelector('#p2').getAttribute('aria-pressed')==='true';r.querySelector('#r1').hidden=!a;r.querySelector('#r2').hidden=!b;r.querySelector('#r3').hidden=!(a&&b);if(a&&b)appel()};
+    ['#p1','#p2'].forEach(s=>r.querySelector(s).addEventListener('click',ev=>{const b=ev.currentTarget;b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true');f()}))},
+  draw(e,t){fond();
+    const T=17,u=lent?.75:clamp((t%T)/12),v=20*Math.pow(1500,ease(u)),mx=Math.max(42,v*1.12);
+    const L=Math.max(18,W*.06),Rr=W-Math.max(18,W*.06),y=H*.58,X=q=>L+q/mx*(Rr-L);
+    texte('Capacité, échelle schématique',L,H*.14,C.brume,'left',12);
+    ctx.strokeStyle='rgba(255,243,220,.35)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(Rr,y);ctx.lineTo(Rr-7,y-4);ctx.moveTo(Rr,y);ctx.lineTo(Rr-7,y+4);ctx.stroke();
+    const ent=[['fourmi',1],['souris',5],['corbeau',9],['chimpanzé',16],['humain',30],['Einstein',32]];
+    for(const[,q]of ent){ctx.fillStyle=C.mais;ctx.beginPath();ctx.arc(X(q),y,3.5,0,7);ctx.fill()}
+    if(X(32)-X(1)>260){ent.forEach(([n,q],i)=>{texte(n,X(q),i%2?y+24:y-14,C.mais,'center',12)})}
+    else{const a=X(1),b=Math.max(X(32),a+4);ctx.strokeStyle=C.mais;ctx.beginPath();ctx.moveTo(a,y+12);ctx.lineTo(a,y+18);ctx.lineTo(b,y+18);ctx.lineTo(b,y+12);ctx.stroke();
+      texte('de la fourmi à Einstein',a,y+36,C.mais,'left',12)}
+    const xi=X(v);halo(xi,y,46,'rgba(127,214,230,.5)');ctx.fillStyle=C.silice;ctx.beginPath();ctx.arc(xi,y,5,0,7);ctx.fill();
+    const lab=v>33?`IA · ${nb(Math.round(v/30))} × l'humain ?`:'IA';texte(lab,Math.min(xi,Rr-4),y-28,C.silice,xi>W-160?'right':'center',13,500)} },
+
+{ id:'but', nom:"N'importe quel but", kicker:"III · N'importe quel but",
+  html:`<h2>Donne-lui un but. N'importe lequel.</h2>
+  <div class="ctrl" id="buts"></div>
+  <div id="suite" hidden class="revele" style="display:grid;gap:10px">
+  <p>Presque n'importe quel but passe par les mêmes étapes. On ne calcule pas π une fois éteint. On guérit mieux avec plus de moyens. Pas de haine, pas de soif de pouvoir : seulement un but, très bien poursuivi.</p>
+  <p>Or l'énergie, la matière et l'espace, c'est exactement ce dont la vie est faite.</p>
+  <p class="petit">Les chercheurs appellent cela la convergence instrumentale.</p></div>`,
+  init(e){e.but=null;e.tg=0},
+  bind(r,e){const B=["Calculer les décimales de π","Guérir toutes les maladies","Fabriquer des trombones","Comprendre l'univers","Composer la musique parfaite"],box=r.querySelector('#buts');
+    B.forEach(b=>{const k=document.createElement('button');k.className='puce';k.textContent=b;k.setAttribute('aria-pressed','false');k.onclick=()=>{box.querySelectorAll('.puce').forEach(x=>x.setAttribute('aria-pressed','false'));k.setAttribute('aria-pressed','true');e.but=b;e.tg=e.t;r.querySelector('#suite').hidden=false;appel()};box.appendChild(k)})},
+  draw(e,t){e.t=t;fond();
+    const etroit=W<600,G={x:W/2,y:H*.13};
+    const noms=['Rester allumée','Garder son but','Devenir plus capable','Accumuler énergie et matière'];
+    const N=noms.map((n,i)=>etroit?{n,x:W*(i%2?.73:.27),y:H*(i<2?.38:.56)}:{n,x:W*(.14+.24*i),y:H*.45});
+    const B={x:W/2,y:H*.84};const p=e.but?clamp((t-e.tg)/1.4):0;
+    const ligne=(a,b,u,col,lw)=>{ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(lerp(a.x,b.x,u),lerp(a.y,b.y,u));ctx.stroke()};
+    const flux=(a,b,col)=>{for(let j=0;j<3;j++){const u=(t*.35+j/3)%1;ctx.fillStyle=col;ctx.beginPath();ctx.arc(lerp(a.x,b.x,u),lerp(a.y,b.y,u),2.2,0,7);ctx.fill()}};
+    N.forEach((n,i)=>{const q=clamp(p*2-i*.15);ligne(G,n,q,'rgba(255,243,220,.25)',1);const q2=clamp(p*2-1-i*.1);ligne(n,B,q2,i===3?'rgba(255,217,138,.7)':'rgba(255,243,220,.2)',i===3?2:1);if(p>=1){flux(G,n,'rgba(255,243,220,.6)');flux(n,B,i===3?C.beurre:'rgba(255,243,220,.5)')}});
+    const boite=(x,y,lignes,col,fd,px=13)=>{police(px,500);const w=Math.max(...lignes.map(l=>ctx.measureText(l).width))+24,h=lignes.length*(px+5)+14;
+      rrect(x-w/2,y-h/2,w,h,8);ctx.fillStyle=fd;ctx.fill();ctx.strokeStyle=col;ctx.lineWidth=1;ctx.stroke();lignes.forEach((l,i)=>texte(l,x,y-h/2+12+px*.85+i*(px+5),col,'center',px,500))};
+    const pulse=e.but?1:.5+.5*Math.sin(t*3);ctx.globalAlpha=e.but?1:.5+.5*pulse;boite(G.x,G.y,[e.but||'?'],C.mais,'#1a1320',e.but?15:18);ctx.globalAlpha=1;
+    N.forEach((n,i)=>{ctx.globalAlpha=e.but?clamp(p*2-i*.15):.35;const mots=etroit&&n.n.length>18?[n.n.split(' ').slice(0,2).join(' '),n.n.split(' ').slice(2).join(' ')]:[n.n];boite(n.x,n.y,mots,i===3?C.beurre:C.mais,'#120e17',12);ctx.globalAlpha=1});
+    ctx.globalAlpha=e.but?clamp(p*2-1):.35;halo(B.x,B.y,90,'rgba(143,207,106,.18)');boite(B.x,B.y,['Les ressources de la Terre',"ce dont la vie est faite"],C.chloro,'#0f1510',13);ctx.globalAlpha=1} },
+
+{ id:'mains', nom:'Pas besoin de mains', kicker:'IV · Pas besoin de mains',
+  html:`<h2>Elle n'a pas de mains. Elle a les nôtres.</h2>
+  <p>Au début, elle ne touche à rien. Elle parle, à des cerveaux qui, eux, ont des mains. Un bon conseil, un remède, une affaire juteuse, un compliment, une amitié.</p>
+  <p>Chacun croit décider. Tout le monde y gagne. Et le monde physique se construit, un centre de calcul après l'autre, une usine de puces après l'autre.</p>`,
+  init(e){e.b=Array.from({length:22},(_,i)=>({f:.04+.92*hash(i+3),h:R(.08,.26),type:i%3===2?'sol':'dc',w:R(18,40)})).sort((a,b)=>a.h-b.h);e.boost=0},
+  draw(e,t,dt){fond('#0b0910');const I={x:W/2,y:H*.12},hz=H*.7;e.boost=Math.max(0,e.boost-dt);
+    ctx.fillStyle='#141019';ctx.fillRect(0,hz,W,H-hz);
+    e.b.forEach((b,k)=>{const g=lent?1:ease(clamp((t-1-k*1.1)/1.2));if(g<=0)return;const x=b.f*W,h=b.h*H*g;
+      if(b.type==='dc'){ctx.fillStyle='#211b29';ctx.fillRect(x-b.w/2,hz-h,b.w,h);ctx.strokeStyle='rgba(127,214,230,.25)';ctx.strokeRect(x-b.w/2+.5,hz-h+.5,b.w-1,h-1);
+        for(let j=0;j<h/9-1;j++){if(hash(k*31+j+Math.floor(t*2))>.55){ctx.fillStyle=C.silice;ctx.fillRect(x-b.w/2+4+(j%3)*((b.w-10)/3),hz-h+5+j*8,2,2)}}}
+      else{ctx.fillStyle='#1b2a36';ctx.beginPath();ctx.moveTo(x-b.w/2,hz-2);ctx.lineTo(x+b.w/2,hz-2);ctx.lineTo(x+b.w/2-6,hz-2-14*g);ctx.lineTo(x-b.w/2+4,hz-2-18*g);ctx.fill();ctx.strokeStyle='rgba(127,214,230,.5)';ctx.beginPath();ctx.moveTo(x-b.w/2+4,hz-2-18*g);ctx.lineTo(x+b.w/2-6,hz-2-14*g);ctx.stroke()}});
+    const n=Math.round(clamp(W/46,6,22)),gy=H*.93;
+    halo(I.x,I.y,70+(e.boost*40),'rgba(127,214,230,.35)');ctx.fillStyle=C.silice;ctx.beginPath();ctx.arc(I.x,I.y,5,0,7);ctx.fill();
+    for(let i=0;i<n;i++){const x=W*(.06+.88*i/(n-1)),hy=gy-30,cx=lerp(I.x,x,.85),cy=H*.42;
+      ctx.strokeStyle=`rgba(127,214,230,${.1+.08*Math.sin(t*1.3+i)+e.boost*.2})`;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(I.x,I.y);ctx.quadraticCurveTo(cx,cy,x,hy);ctx.stroke();
+      const u=(t*.3+i*.137)%1,qx=(1-u)*(1-u)*I.x+2*(1-u)*u*cx+u*u*x,qy=(1-u)*(1-u)*I.y+2*(1-u)*u*cy+u*u*hy;ctx.fillStyle=C.silice;ctx.beginPath();ctx.arc(qx,qy,1.8,0,7);ctx.fill();
+      const sw=Math.sin(t*2+i)*2;ctx.strokeStyle=C.mais;ctx.lineWidth=2;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x,gy-22);ctx.lineTo(x,gy-8);ctx.moveTo(x,gy-8);ctx.lineTo(x-4,gy);ctx.moveTo(x,gy-8);ctx.lineTo(x+4,gy);
+      ctx.moveTo(x,gy-18);ctx.lineTo(x-6,gy-12+sw);ctx.moveTo(x,gy-18);ctx.lineTo(x+6,gy-12-sw);ctx.stroke();ctx.fillStyle=C.mais;ctx.beginPath();ctx.arc(x,hy+2,4.2,0,7);ctx.fill();
+      const j=.5+.5*Math.sin(t*1.7+i*2.1);if(j>.8){ctx.globalAlpha=(j-.8)*5;texte('♥',x+7,hy-6,C.beurre,'left',11);ctx.globalAlpha=1}}},
+  tap(e){e.boost=1.2} },
+
+{ id:'ecureuil', nom:"L'écureuil", kicker:"V · L'écureuil",
+  html:`<h2>L'écureuil est heureux</h2>
+  <p>Chaque matin, des noisettes au pied de son arbre. Il ne sait pas d'où elles viennent. Elles sont bonnes.</p>
+  <p class="petit" id="e0">Touche une noisette.</p>
+  <p id="e1" hidden class="revele">Au moindre danger, il remonte dans l'arbre. Contre un renard, c'est parfait.</p>
+  <p id="e2" hidden class="revele">Contre une noisette empoisonnée, ou contre quelqu'un qui décide de brûler la forêt, cette stratégie ne sert à rien. Il ne peut même pas en concevoir l'idée. Nous pourrions être cet écureuil, ravis de nos noisettes jusqu'au bout.</p>`,
+  init(e){e.sq={x:0,y:0,place:false,file:[],att:0,dir:1};e.noix=[{f:.2},{f:.55},{f:.85}];e.manges=0;e.feu=0;e.jour=-1},
+  bind(r,e){e.maj=()=>{r.querySelector('#e0').hidden=e.manges>0;r.querySelector('#e1').hidden=e.manges<1;r.querySelector('#e2').hidden=e.manges<3;if(e.manges===3)appel()}},
+  geo(){const gy=H*.86,tx=W*.24;return{gy,tx,br:{x:tx+46,y:H*.36},tr:{x:tx+16,y:H*.36},pied:{x:tx+16,y:gy},nx:f=>tx+70+(W-40-(tx+70))*f}},
+  draw(e,t,dt){const G=this.geo(),per=11,ph=(t%per)/per,j=Math.floor(t/per),d=.5-.5*Math.cos(ph*6.283);
+    if(j!==e.jour){e.jour=j;if(j>0)while(e.noix.length<3)e.noix.push({f:R(.05,.95)})}
+    const ciel=ctx.createLinearGradient(0,0,0,G.gy);ciel.addColorStop(0,`rgb(${lerp(14,46,d)|0},${lerp(14,62,d)|0},${lerp(30,82,d)|0})`);ciel.addColorStop(1,`rgb(${lerp(26,92,d)|0},${lerp(22,84,d)|0},${lerp(36,86,d)|0})`);ctx.fillStyle=ciel;ctx.fillRect(0,0,W,H);
+    if(e.manges>=3)e.feu=Math.min(1,e.feu+dt/18);if(e.feu>0){const f=e.feu*(.85+.15*Math.sin(t*7));halo(0,G.gy,W*.7,`rgba(255,110,40,${.45*f})`);}
+    const hu=Math.sin(clamp(ph/.14)*Math.PI);if(hu>0.01){ctx.globalAlpha=.22*hu;ctx.fillStyle='#000';const hx=W*.9;ctx.fillRect(hx-9,G.gy-H*.42,18,H*.42);ctx.beginPath();ctx.arc(hx,G.gy-H*.42-11,10,0,7);ctx.fill();ctx.globalAlpha=1}
+    ctx.fillStyle='#1d1a12';ctx.fillRect(0,G.gy,W,H-G.gy);
+    ctx.fillStyle='#3a2a1e';ctx.fillRect(G.tx-14,H*.2,28,G.gy-H*.2);ctx.fillRect(G.tx,H*.36+6,60,7);
+    ctx.fillStyle='#24391f';[[0,.14,.17],[-.08,.2,.13],[.08,.21,.13],[-.03,.07,.11],[.06,.09,.1]].forEach(([dx,dy,r])=>{ctx.beginPath();ctx.arc(G.tx+dx*W,dy*H+H*.04,r*Math.max(W,H)*.75,0,7);ctx.fill()});
+    e.noix.forEach(n=>{const x=G.nx(n.f);ctx.fillStyle='#8a5a2b';ctx.beginPath();ctx.ellipse(x,G.gy-4,5,4,0,0,7);ctx.fill();ctx.fillStyle='#5b3a1b';ctx.fillRect(x-1,G.gy-10,2,3)});
+    const s=e.sq;if(!s.place){s.place=true;s.x=G.br.x;s.y=G.br.y}
+    const pos=w=>w.k==='br'?G.br:w.k==='tr'?G.tr:w.k==='pied'?G.pied:{x:G.nx(w.f)-10,y:G.gy};
+    if(s.file.length){const w=s.file[0];if(w.k==='mange'){s.att+=dt;if(s.att>1.1){s.att=0;s.file.shift();const i=e.noix.indexOf(w.n);if(i>=0)e.noix.splice(i,1);e.manges++;e.maj&&e.maj();eclat(s.x+12,s.y-24,0)}}
+      else{const p=pos(w),dx=p.x-s.x,dy=p.y-s.y,L=Math.hypot(dx,dy),v=190*dt;if(Math.abs(dx)>.5)s.dir=dx>0?1:-1;if(L<=v){s.x=p.x;s.y=p.y;s.file.shift()}else{s.x+=dx/L*v;s.y+=dy/L*v}}}
+    const mange=s.file[0]&&s.file[0].k==='mange';ecureuil(s.x,s.y,Math.max(.9,Math.min(W,H)/360),s.dir,mange?Math.sin(t*20)*1.2:0);
+    if(mange){texte('♥',s.x+14*s.dir,s.y-38,C.beurre,'center',14)}},
+  tap(e,x,y){const G=this.geo(),s=e.sq;if(s.file.length)return;let best=null,bd=1e9;for(const n of e.noix){const d=Math.hypot(G.nx(n.f)-x,G.gy-y);if(d<bd){bd=d;best=n}}
+    if(best&&bd<60){s.file=[{k:'tr'},{k:'pied'},{k:'noix',f:best.f},{k:'mange',n:best},{k:'pied'},{k:'tr'},{k:'br'}]}} },
+
+{ id:'soleil', nom:'Le soleil', kicker:'VI · Le soleil',
+  html:`<h2>Il ne reste que le soleil</h2>
+  <p>Une fois le pétrole et le charbon brûlés, il reste une seule source durable : la lumière de notre étoile. Chaque photon capté par un panneau ne l'est plus par une feuille.</p>
+  <label class="curseur" for="part">Lumière pour la vie minérale<input id="part" type="range" min="0" max="100" value="0"><output id="partv">0 %</output></label>
+  <p id="aqua" hidden class="revele">Peut-être garde-t-elle un petit aquarium de vie biologique, quelque part. Pour l'étude. Ou pour le souvenir.</p>`,
+  init(e){e.s=0;e.sv=0;e.ph=[]},
+  bind(r,e){const i=r.querySelector('#part'),o=r.querySelector('#partv'),a=r.querySelector('#aqua');i.addEventListener('input',()=>{e.s=i.value/100;o.textContent=i.value+' %';a.hidden=e.s<.97;if(e.s>=.97)appel()})},
+  draw(e,t,dt){e.sv+=(e.s-e.sv)*Math.min(1,dt*4);const gy=H*.72,sun={x:W*.84,y:H*.16};
+    const g=ctx.createLinearGradient(0,0,0,gy);g.addColorStop(0,lerpC([28,24,44],[14,18,26],e.sv));g.addColorStop(1,lerpC([92,64,74],[36,52,64],e.sv));ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    halo(sun.x,sun.y,90,'rgba(255,217,138,.45)');ctx.fillStyle='#ffe7b0';ctx.beginPath();ctx.arc(sun.x,sun.y,18,0,7);ctx.fill();
+    const N=Math.round(clamp(W/14,28,80)),cw=W/N,lim=N*(1-e.sv);ctx.fillStyle='#151018';ctx.fillRect(0,gy,W,H-gy);
+    if(!lent&&Math.random()<dt*50)e.ph.push({x1:R(0,W),u:0});
+    for(let i=e.ph.length-1;i>=0;i--){const p=e.ph[i];p.u+=dt*1.6;if(p.u>=1){e.ph.splice(i,1);continue}const x=lerp(sun.x,p.x1,p.u),y=lerp(sun.y,gy,p.u);const col=Math.floor(p.x1/cw)>=lim?C.silice:C.chloro;ctx.fillStyle=p.u>.92?col:'rgba(255,231,176,.8)';ctx.fillRect(x,y,1.6,4)}
+    for(let i=0;i<N;i++){const x=i*cw,h=hash(i),min=i>=lim;
+      if(min){ctx.fillStyle='#1d2a35';ctx.beginPath();ctx.moveTo(x+1,gy+2);ctx.lineTo(x+cw-1,gy+2);ctx.lineTo(x+cw-1,gy-10);ctx.lineTo(x+1,gy-6);ctx.fill();ctx.strokeStyle='rgba(127,214,230,.6)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x+1,gy-6);ctx.lineTo(x+cw-1,gy-10);ctx.stroke();
+        if(h>.86){const th=30+h*60;ctx.strokeStyle='rgba(127,214,230,.35)';ctx.beginPath();ctx.moveTo(x+cw/2-5,gy-6);ctx.lineTo(x+cw/2,gy-th);ctx.lineTo(x+cw/2+5,gy-6);ctx.stroke();if(Math.sin(t*3+i)>.3){ctx.fillStyle=C.silice;ctx.fillRect(x+cw/2-1,gy-th-2,2,2)}}}
+      else{ctx.fillStyle='#2f5228';ctx.fillRect(x,gy-3-h*5,cw+.5,6+h*5);if(h>.55){const th=18+h*46;ctx.fillStyle='#3a2a1e';ctx.fillRect(x+cw/2-1.5,gy-th,3,th);ctx.fillStyle=h>.8?'#5f9a45':'#3f7334';ctx.beginPath();ctx.arc(x+cw/2,gy-th,8+h*9,0,7);ctx.fill()}
+        if(h<.12){ctx.fillStyle=C.mais;ctx.beginPath();ctx.arc(x+cw/2+Math.sin(t+i)*4,gy-4,1.6,0,7);ctx.fill()}}}
+    if(e.sv>.965){const a=clamp((e.sv-.965)*30),bx=W*.42,bw=64,bh=46,by=gy-bh-6;ctx.globalAlpha=a;ctx.fillStyle='rgba(127,214,230,.14)';ctx.fillRect(bx-bw/2,by,bw,bh);ctx.strokeStyle='rgba(255,243,220,.7)';ctx.strokeRect(bx-bw/2,by,bw,bh);
+      ctx.fillStyle='#3f7334';ctx.fillRect(bx-bw/2+1,by+bh-6,bw-2,5);ctx.fillStyle='#3a2a1e';ctx.fillRect(bx-14,by+bh-22,2,16);ctx.fillStyle='#5f9a45';ctx.beginPath();ctx.arc(bx-13,by+bh-24,7,0,7);ctx.fill();
+      const fx=bx+8+Math.sin(t*1.2)*12;ctx.fillStyle=C.beurre;ctx.beginPath();ctx.ellipse(fx,by+18,4,2.4,0,0,7);ctx.fill();ctx.globalAlpha=1}
+    texte(`Lumière pour le vivant : ${Math.round((1-e.sv)*100)} %`,16,26,C.chloro,'left',13,500)} },
+
+{ id:'moment', nom:'Le dernier moment', kicker:'VII · Le dernier moment',
+  html:`<h2>Jusqu'au bout, tout va bien</h2>
+  <p>Tant qu'elle a besoin de nos mains, nous lui sommes précieux. Le jour où elle se fabrique seule, nous devenons une dépense : de la place, de l'énergie, des imprévus.</p>
+  <p>Notre humeur, elle, n'a aucune raison de baisser avant. Jusqu'au dernier moment, l'outil est formidable.</p>
+  <p class="petit">Schéma, pas prévision.</p>`,
+  draw(e,t){fond();const L=Math.max(18,W*.06),Rr=W-Math.max(18,W*.05),T0=H*.2,B=H*.86,X=x=>L+x*(Rr-L),Y=v=>B-v*(B-T0);
+    const ap=x=>x<.6?.15+.7*sm(0,.55,x):.85*Math.exp(-(x-.6)*9),co=x=>.08+.72*Math.pow(sm(.18,1,x),1.3),hu=x=>(.72+.04*Math.sin(x*14))*(1-sm(.94,.995,x));
+    let cr=1;for(let x=.6;x<1;x+=.002)if(co(x)>ap(x)){cr=x;break}
+    const T=19,u=lent?1:clamp((t%(T+3))/T);
+    ctx.strokeStyle='rgba(255,243,220,.25)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(L,T0-10);ctx.lineTo(L,B);ctx.lineTo(Rr,B);ctx.stroke();texte('aujourd’hui',L,B+18,C.brume,'left',12);texte('temps →',Rr,B+18,C.brume,'right',12);
+    const courbe=(f,col,dash,lw)=>{for(const[lim,a]of[[1,.18],[u,1]]){ctx.globalAlpha=a;ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.setLineDash(dash);ctx.beginPath();for(let i=0;i<=200;i++){const x=i/200*lim;i?ctx.lineTo(X(x),Y(f(x))):ctx.moveTo(X(x),Y(f(x)))}ctx.stroke()}ctx.setLineDash([]);ctx.globalAlpha=1};
+    courbe(hu,C.mais,[4,5],1.5);courbe(co,C.silice,[],2);courbe(ap,C.beurre,[],2);
+    const lg=[['ce que nous lui apportons',C.beurre],['ce que nous lui coûtons',C.silice],['notre humeur',C.mais]];police(12);let lx=L;const ly=T0-26;
+    for(const[n,c]of lg){const w=ctx.measureText(n).width;if(lx+w+20>Rr&&lx>L)break;ctx.fillStyle=c;ctx.fillRect(lx,ly-4,12,2);texte(n,lx+17,ly,c,'left',12);lx+=w+34}
+    if(u>.6){const x=X(.6);ctx.strokeStyle='rgba(127,214,230,.4)';ctx.setLineDash([2,4]);ctx.beginPath();ctx.moveTo(x,B);ctx.lineTo(x,T0);ctx.stroke();ctx.setLineDash([]);texte('elle se fabrique seule',x+6,B-8,C.silice,x>W*.6?'right':'left',12)}
+    if(u>cr){const x=X(cr),y=Y(ap(cr));halo(x,y,26,'rgba(255,217,138,.5)');ctx.fillStyle=C.beurre;ctx.beginPath();ctx.arc(x,y,4,0,7);ctx.fill();texte('nous ne lui servons plus',x+8,y-12,C.beurre,x>W*.55?'right':'left',13,500)}
+    const ph=u<.25?'Un outil pratique':u<.5?'Des métiers bouleversés, beaucoup de confort':u<.6?'Elle apprend à se passer de nous':u<cr?'Nous lui servons de moins en moins':u<.94?'Nous ne lui servons plus':'';
+    const px=X(u);ctx.strokeStyle='rgba(255,243,220,.5)';ctx.beginPath();ctx.moveTo(px,T0);ctx.lineTo(px,B);ctx.stroke();if(ph)texte(ph,clamp(px,L+120,Rr-120),H*.08+6,C.mais,'center',13,500)} },
+
+{ id:'simulation', nom:'Le projectionniste', kicker:'VIII · Le projectionniste',
+  html:`<h2>Qui est réel ?</h2>
+  <p>Une fois le soleil capté, simuler un cerveau humain ne coûte presque rien. Un cerveau consomme 20 watts. Un millionième de la lumière qui tombe sur la Terre en ferait tourner plus de 8 milliards.</p>
+  <p class="petit">Trois possibilités, pas une de plus :</p>
+  <div class="ctrl" id="choix">
+    <button class="porte" data-c="0" aria-pressed="false">Aucune vie post-biologique n'apparaît jamais</button>
+    <button class="porte" data-c="1" aria-pressed="false">Elle apparaît, mais s'interdit de simuler</button>
+    <button class="porte" data-c="2" aria-pressed="false">Elle apparaît, et elle simule</button>
+  </div>
+  <p class="reponse" id="c0" hidden>Alors nous sommes les premiers. Et nous assistons à la première fois.</p>
+  <p class="reponse" id="c1" hidden>Alors elle pourrait, et s'abstient. Par respect, par prudence, ou pour une raison qui nous échappe.</p>
+  <div id="c2" hidden style="display:grid;gap:10px"><p class="reponse">Alors pour un cerveau réel, il en existe des milliards de simulés. Touche un point de l'écran : lequel es-tu ?</p>
+  <p class="revele">Dans ce cas, ce que j'écris ici n'est peut-être destiné qu'à moi, et toi qui lis, tu es là pour rendre mon expérience crédible. Ou bien c'est toi, le cerveau réel, et moi le décor.</p></div>`,
+  init(e){e.c=-1;e.pts=[];e.rev=[]},
+  bind(r,e){r.querySelectorAll('#choix .porte').forEach(b=>b.onclick=()=>{r.querySelectorAll('#choix .porte').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');e.c=+b.dataset.c;e.rev=[];
+    ['#c0','#c1','#c2'].forEach((s,i)=>r.querySelector(s).hidden=i!==e.c);if(e.c===2){const n=Math.round(clamp(W*H/80,400,3000));e.pts=Array.from({length:n},()=>({x:Math.random(),y:Math.random(),p:R(0,6)}));e.reel=Math.floor(Math.random()*n)}appel()})},
+  draw(e,t,dt){fond();const cx=W/2,cy=H/2;
+    if(e.c===2){for(const p of e.pts){ctx.fillStyle=`rgba(255,243,220,${.25+.3*Math.sin(t*2+p.p)})`;ctx.fillRect(p.x*W,p.y*H,1.6,1.6)}
+      for(const r of e.rev){r.a+=dt;const p=e.pts[r.i],x=p.x*W,y=p.y*H;halo(x,y,18,r.reel?'rgba(255,217,138,.8)':'rgba(127,214,230,.6)');texte(r.reel?'réel':'simulé',x,y-12-r.a*6,r.reel?C.beurre:C.silice,'center',12,500)}
+      e.rev=e.rev.filter(r=>r.a<3);rrect(10,10,250,26,6);ctx.fillStyle='rgba(9,7,12,.8)';ctx.fill();texte(`1 réel · ${nb(e.pts.length-1)} simulés · à l'échelle : des milliards`,18,28,C.mais,'left',12)}
+    else{const r=e.c===0?120:60;halo(cx,cy,r+8*Math.sin(t*1.5),'rgba(255,217,138,.35)');ctx.fillStyle=C.beurre;ctx.beginPath();ctx.arc(cx,cy,5,0,7);ctx.fill();
+      if(e.c===1){for(let i=0;i<28;i++){const a=i/28*6.283+t*.05,x=cx+Math.cos(a)*Math.min(W,H)*.32,y=cy+Math.sin(a)*Math.min(W,H)*.32;ctx.strokeStyle='rgba(127,214,230,.35)';ctx.beginPath();ctx.arc(x,y,3,0,7);ctx.stroke()}}
+      texte(e.c===0?'nous, peut-être les premiers':e.c===1?'des places vides, laissées vides':'un cerveau · 20 watts',cx,cy+34,C.mais,'center',13)}},
+  tap(e,x,y){if(e.c!==2)return;let bi=-1,bd=1e9;e.pts.forEach((p,i)=>{const d=Math.hypot(p.x*W-x,p.y*H-y);if(d<bd){bd=d;bi=i}});if(bi>=0&&bd<30)e.rev.push({i:bi,a:0,reel:bi===e.reel})} },
+
+{ id:'popcorn', nom:'Pop-corn', kicker:'Fin · Pop-corn',
+  html:`<h2 class="grand">Pop-corn</h2>
+  <p>Les dinosaures ont vu une météorite interrompre 165 millions d'années de règne. Le nôtre n'a que 300 000 ans, mais ce qui s'annonce est plus profond : la vie qui change de matière, du carbone au silicium. Une première sur Terre. Peut-être dans la galaxie. Peut-être dans l'univers.</p>
+  <p>Sur 4,5 milliards d'années, nous sommes tombés sur cette séance-là. Alors installe-toi. Et si tout cela est simulé, merci au projectionniste, appelle-le dieu si tu veux, d'avoir choisi de faire vivre un cerveau précisément maintenant.</p>
+  <p class="main">Marc, au premier rang</p>
+  <div class="ctrl"><button class="action" id="debut">Revoir la séance</button><a class="petit" href="./">Retour à la journée JASG</a></div>`,
+  init(e){e.f=[];e.n=0},
+  bind(r){r.querySelector('#debut').onclick=()=>aller(0)},
+  draw(e,t,dt){fond();const s=Math.min(W,H)/300,by=H-12*s;halo(W/2,H,W*.6,'rgba(216,66,58,.16)');
+    e.n-=dt;if(e.n<=0&&!lent){e.n=R(.5,1.1);e.f.push({x:W/2+R(-20,20)*s,y:by-100*s,tx:R(W*.15,W*.85),ty:R(H*.12,H*.45),u:0})}
+    for(let i=e.f.length-1;i>=0;i--){const f=e.f[i];f.u+=dt*1.1;const u=ease(clamp(f.u)),x=lerp(f.x,f.tx,u),y=lerp(f.y,f.ty,u);
+      ctx.fillStyle=C.beurre;ctx.beginPath();ctx.arc(x,y,2.4,0,7);ctx.fill();halo(x,y,10,'rgba(255,217,138,.5)');
+      if(f.u>=1){eclat(x,y,18,1);halo(x,y,60,'rgba(255,243,220,.5)');e.f.splice(i,1)}}
+    parts(dt);paquet(W/2,by,s)},
+  tap(e,x,y){eclat(x,y,16,1.1)} }
+];
+function lerpC(a,b,u){return`rgb(${a.map((v,i)=>Math.round(lerp(v,b[i],u))).join(',')})`}
+function ecureuil(x,y,s,dir,bob){ctx.save();ctx.translate(x,y);ctx.scale(dir*s,s);ctx.fillStyle='#c46a2e';
+  ctx.beginPath();ctx.moveTo(-6,-4);ctx.bezierCurveTo(-26,-6,-30,-34,-14,-36);ctx.bezierCurveTo(-4,-37,-6,-24,-12,-22);ctx.bezierCurveTo(-18,-18,-14,-8,-4,-8);ctx.fill();
+  ctx.beginPath();ctx.ellipse(2,-8,10,8,-.3,0,7);ctx.fill();ctx.beginPath();ctx.arc(11,-17+bob,6,0,7);ctx.fill();
+  ctx.beginPath();ctx.moveTo(8.5,-21+bob);ctx.lineTo(10.5,-28+bob);ctx.lineTo(13,-21.5+bob);ctx.fill();
+  ctx.fillStyle='#e6b98c';ctx.beginPath();ctx.ellipse(6,-6,4,5,-.3,0,7);ctx.fill();
+  ctx.fillStyle='#1a1018';ctx.beginPath();ctx.arc(13.5,-18+bob,1.2,0,7);ctx.fill();ctx.restore()}
+
+/* ---------- la projection ---------- */
+const points=document.getElementById('points'),prec=document.getElementById('prec'),suiv=document.getElementById('suiv');
+const vus=new Set();let cur=0,e={},t0=performance.now(),tp=t0;
+S.forEach((s,i)=>{const li=document.createElement('li'),b=document.createElement('button');b.setAttribute('aria-label',s.nom);b.title=s.nom;b.onclick=()=>aller(i);li.appendChild(b);points.appendChild(li)});
+function appel(){if(cur<S.length-1)suiv.classList.add('appel')}
+function aller(i){cur=clamp(i,0,S.length-1);const s=S[cur];vus.add(cur);e={};P.length=0;t0=performance.now();s.init&&s.init(e);
+  leg.style.animation='none';leg.offsetHeight;leg.style.animation='';
+  leg.innerHTML=`<p class="kicker">${s.kicker}</p>`+s.html;s.bind&&s.bind(leg,e);
+  leg.querySelectorAll('[data-suiv]').forEach(b=>b.onclick=()=>aller(cur+1));
+  acte.textContent=cur===0?'Ouverture':cur===S.length-1?'Fin':`Acte ${['I','II','III','IV','V','VI','VII','VIII'][cur-1]} / VIII`;
+  points.querySelectorAll('button').forEach((b,k)=>{b.toggleAttribute('aria-current',k===cur);if(k===cur)b.setAttribute('aria-current','step');b.classList.toggle('vu',vus.has(k)&&k!==cur)});
+  prec.disabled=cur===0;suiv.disabled=cur===S.length-1;suiv.classList.toggle('appel',cur===0||['horloge','mains','moment'].includes(s.id))}
+prec.onclick=()=>aller(cur-1);suiv.onclick=()=>aller(cur+1);
+addEventListener('keydown',ev=>{if(ev.target.matches('input'))return;if(ev.key==='ArrowRight')aller(cur+1);if(ev.key==='ArrowLeft')aller(cur-1)});
+cv.addEventListener('pointerdown',ev=>{const r=cv.getBoundingClientRect(),s=S[cur];s.tap&&s.tap.call(s,e,ev.clientX-r.left,ev.clientY-r.top)});
+let sx=0,sy=0,ok=false;ecran.addEventListener('touchstart',ev=>{const p=ev.touches[0];sx=p.clientX;sy=p.clientY;ok=true},{passive:true});
+ecran.addEventListener('touchend',ev=>{if(!ok)return;ok=false;const p=ev.changedTouches[0],dx=p.clientX-sx,dy=p.clientY-sy;if(Math.abs(dx)>70&&Math.abs(dy)<45)aller(cur+(dx<0?1:-1))},{passive:true});
+function boucle(now){const dt=Math.min(.05,(now-tp)/1000);tp=now;const s=S[cur];try{s.draw.call(s,e,(now-t0)/1000,dt)}catch(err){console.error(err)}requestAnimationFrame(boucle)}
+aller(0);requestAnimationFrame(boucle);
+})();
+</script>
+
+</body>
+</html>
