@@ -158,7 +158,7 @@ function sur24(y){const s=y/AGE*86400;if(s>=3600)return`${(s/3600).toFixed(1).re
 const S=[
 { id:'ouverture', nom:'Ouverture', kicker:'Un projet JASG · au premier rang', titre:'Pop-corn', grand:true,
   beats:[
-    {t:"Depuis 4,5 milliards d'années, la vie sur Terre est faite de carbone.",aide:"Avance avec la flèche, une phrase à la fois."},
+    {t:"Depuis 4,5 milliards d'années, la vie sur Terre est faite de carbone."},
     {t:"Elle est peut-être sur le point de changer de matière."},
     {t:"Et nous sommes dans la salle."},
     {t:"Un scénario, pas une prophétie. Hautement crédible, pourtant.",petit:true}],
@@ -175,11 +175,9 @@ const S=[
 { id:'horloge', nom:"Le moment", kicker:"I · Le moment", titre:"On arrive pile à la fin du film",
   beats:[
     {t:"Imagine l'histoire de la Terre en une seule journée.",span:AGE},
-    {t:"La vie apparaît vers 4 heures du matin.",span:AGE},
     {t:"Les dinosaures règnent de 22 h 47 à 23 h 39.",span:3e8},
     {t:"Nous arrivons à 23 h 59 et 54 secondes.",span:1e6},
     {t:"La première puce en silicium : à la dernière milliseconde.",span:110},
-    {t:"Et c'est maintenant que la question se pose.",span:110},
     {t:"Que se passe-t-il quand quelque chose devient plus intelligent que nous ?",span:110}],
   init(e){e.z=0},
   draw(e,t,dt){fond();const b=this.beats[Math.max(0,e.beat)],zc=(Math.log10(AGE)-Math.log10(b.span))/(Math.log10(AGE)-Math.log10(110));
@@ -232,11 +230,9 @@ const S=[
     {t:"Donne-lui un but. N'importe lequel.",ctrl:true,gate:'but',indice:"Choisis un but."},
     {t:"Presque tous passent par les mêmes étapes."},
     {t:"On ne calcule pas π une fois éteint."},
-    {t:"On ne guérit pas mieux avec moins de moyens."},
     {t:"Pas besoin de haine. Juste un but, bien poursuivi."},
     {t:"Or l'énergie et la matière, c'est ce dont la vie est faite."},
-    {t:"Nous voilà en concurrence, sans que personne l'ait voulu."},
-    {t:"Les chercheurs appellent cela la convergence instrumentale.",petit:true}],
+    {t:"Nous voilà en concurrence, sans que personne l'ait voulu."}],
   init(e){e.but=null;e.tg=0},
   bind(r,e){const B=["Calculer les décimales de π","Guérir toutes les maladies","Fabriquer des trombones","Comprendre l'univers","Composer la musique parfaite"],box=r.querySelector('#buts');
     B.forEach(b=>{const k=document.createElement('button');k.className='puce';k.textContent=b;k.setAttribute('aria-pressed','false');k.onclick=()=>{box.querySelectorAll('.puce').forEach(x=>x.setAttribute('aria-pressed','false'));k.setAttribute('aria-pressed','true');e.but=b;e.tg=e.t;debloque('but')};box.appendChild(k)})},
@@ -280,8 +276,7 @@ const S=[
     {t:"Elle n'a même pas besoin de manipuler."},
     {t:"Nous lui déléguons tout, avec plaisir.",go:e=>{e.deleg=true}},
     {t:"La lenteur des robots ne protège de rien."},
-    {t:"Ce sont nos mains qui construisent pour elle.",go:e=>{if(e.tb==null)e.tb=e.t||0}},
-    {t:"Les chercheurs appellent cela la dépossession graduelle.",petit:true}],
+    {t:"Ce sont nos mains qui construisent pour elle.",go:e=>{if(e.tb==null)e.tb=e.t||0}}],
   init(e){e.mots=[];e.mt=0;e.tb=null;e.b=Array.from({length:22},(_,i)=>({f:.04+.92*hash(i+3),h:R(.08,.26),type:i%3===2?'sol':'dc',w:R(18,40)})).sort((a,b)=>a.h-b.h);e.boost=0},
   draw(e,t,dt){e.t=t;fond('#0b0910');const hz=H*.7;e.boost=Math.max(0,e.boost-dt);
     ctx.fillStyle='#141019';ctx.fillRect(0,hz,W,H-hz);
@@ -342,8 +337,7 @@ const S=[
     {t:"Puis elle apprend à se fabriquer seule.",u:.62},
     {t:"Nous devenons une dépense : de la place, de l'énergie, des imprévus.",u:.82},
     {t:"Et notre humeur ?",u:.9},
-    {t:"Elle n'a aucune raison de baisser avant le dernier moment.",u:1},
-    {t:"Schéma, pas prévision.",petit:true,u:1}],
+    {t:"Elle n'a aucune raison de baisser avant le dernier moment.",u:1}],
   init(e){e.u=0},
   draw(e,t,dt){fond();const L=Math.max(18,W*.06),Rr=W-Math.max(18,W*.05),T0=H*.2,B=H*.86,X=x=>L+x*(Rr-L),Y=v=>B-v*(B-T0);
     const ap=x=>x<.6?.15+.7*sm(0,.55,x):.85*Math.exp(-(x-.6)*9),co=x=>.08+.72*Math.pow(sm(.18,1,x),1.3),hu=x=>(.72+.04*Math.sin(x*14))*(1-sm(.94,.995,x));
@@ -393,9 +387,8 @@ const S=[
   beats:[
     {t:"Simuler des cerveaux n'est pas son but. Le scénario n'en a pas besoin."},
     {t:"Mais une fois hégémonique, cela ne lui coûte presque rien."},
-    {t:"Un cerveau tourne avec 20 watts. Le simuler coûterait de mille à un million de fois plus."},
-    {t:"Au pire, 8 milliards de cerveaux demanderaient toute la lumière qui tombe sur la Terre."},
-    {t:"Le Soleil en rayonne deux milliards de fois plus."},
+    {t:"Un cerveau tourne avec 20 watts. Le simuler coûterait bien plus."},
+    {t:"Mais le Soleil fournit de quoi en faire tourner des milliards de milliards."},
     {t:"Il reste trois possibilités. Choisis.",ctrl:true,gate:'sim',indice:"Choisis une possibilité."},
     {t:"Si elle simule, pour un cerveau réel, il y en a des milliards de simulés.",go:e=>e.choisir(2),gate:'point',indice:"Touche un point de l'écran : lequel es-tu ?"},
     {t:"Alors ce que j'écris n'est peut-être destiné qu'à moi."},
@@ -493,7 +486,7 @@ function etat(){const b=S[cur].beats[e.beat],ind=leg.querySelector('#indice'),v=
   points.querySelectorAll('button').forEach((x,k)=>{x.classList.toggle('vu',k<=max&&k!==cur);x.disabled=k>max})}
 function debloque(g){if(e.ok[g])return;e.ok[g]=true;etat();if(!bloque())suiv.classList.add('appel')}
 function montrer(k){const s=S[cur];e.beat=k;const b=s.beats[k];if(b.go)b.go(e);
-  const fil=leg.querySelector('#fil'),deb=Math.max(0,k-2);
+  const fil=leg.querySelector('#fil'),deb=k;
   fil.innerHTML=s.beats.slice(deb,k+1).map((x,j,a)=>`<p class="${j<a.length-1?'passe':'actuel revele'}${x.petit?' petit':''}">${x.t}</p>`).join('');
   leg.querySelector('#zone').hidden=!s.beats.slice(0,k+1).some(x=>x.ctrl);
   suiv.classList.remove('appel');etat()}
